@@ -59,6 +59,7 @@ function buildClipboardText(data) {
   const dueDate = data.dueDate || 'Sin fecha asignada';
   return [
     `TICKET #${data.ticketId}: ${data.subject || '—'}`,
+    data.url,
     `ASIGNADO: @`,
     `VENCIMIENTO: ${dueDate}`,
     `PRIORIDAD: ${priority}`,
