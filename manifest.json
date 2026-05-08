@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Zendesk Ticket Reader",
+  "version": "1.0.0",
+  "description": "Lee y muestra los datos de tickets de Zendesk: asunto, prioridad y fecha de vencimiento.",
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": ["https://*.zendesk.com/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.zendesk.com/agent/tickets/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
