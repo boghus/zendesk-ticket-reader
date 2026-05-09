@@ -10,6 +10,80 @@ Extensión de Chrome que extrae y muestra los datos clave de un ticket de Zendes
 - Copia los datos al portapapeles con un placeholder `ASIGNADO: @` para mencionar manualmente al responsable
 - Se actualiza automáticamente al navegar entre tickets
 
+## Automatización
+
+La extensión automatiza tareas repetitivas del flujo operacional en Zendesk:
+
+- **Extracción automática de metadata del ticket** — lee asunto, prioridad y vencimiento sin intervención manual
+- **Traducción de prioridades** — convierte los valores del sistema al español en tiempo real
+- **Formateo de fechas** — transforma timestamps ISO a formato legible en español
+- **Generación de texto listo para Slack** — arma el mensaje con estructura fija, lista para pegar
+- **Copia inmediata al portapapeles** — un solo clic, sin seleccionar ni formatear nada
+
+Reduciendo fricción manual y errores al compartir contexto entre equipos.
+
+## Impacto operacional
+
+**Antes de la extensión**, compartir el contexto de un ticket requería:
+
+1. Abrir el ticket en Zendesk
+2. Copiar el asunto manualmente
+3. Buscar y leer la prioridad
+4. Buscar y formatear la fecha de vencimiento
+5. Armar el mensaje a mano
+6. Pegarlo en Slack
+
+**Con la extensión:**
+
+1. Abrir el ticket
+2. 1 clic → contexto listo para compartir
+
+---
+
+Cada handoff evitado es tiempo recuperado y contexto que no se pierde en el camino.
+
+
+## Flujo automatizado
+
+```mermaid
+flowchart TD
+    A[🎫 Zendesk Ticket] --> B[Extracción DOM]
+    B --> C[Transformación de datos]
+    C --> D[Formato operativo]
+    D --> E[Clipboard API]
+    E --> F[💬 Slack / Chat interno]
+```
+
+La extensión actúa como pipeline liviano entre la fuente de datos operacional y el canal de comunicación del equipo, sin intervención manual en ningún paso intermedio.
+
+## Casos de uso
+
+- **Escalamiento a ingeniería** — adjuntá el contexto del ticket en segundos al abrir un issue o thread
+- **Comunicación soporte ↔ operaciones** — estandarizá el formato al pasar tickets entre equipos
+- **Seguimiento de tickets críticos** — compartí prioridad y vencimiento sin abrir Zendesk
+- **Compartir contexto rápidamente en Slack** — un clic y el mensaje está listo para pegar
+
+## Stack
+
+| Capa | Tecnología |
+|------|-----------|
+| Extracción | Chrome Content Script (DOM API) |
+| Comunicación | Chrome Message Passing |
+| UI | HTML + CSS vanilla |
+| Integración | Clipboard API |
+
+## Decisiones de diseño
+
+- **Sin backend** — toda la lógica corre en el browser, sin latencia ni dependencias externas
+- **Sin frameworks** — vanilla JS para mantener la extensión liviana y sin superficie de ataque
+- **Content script sobre API** — evita exponer credenciales de Zendesk, lee directo del DOM
+
+## Limitaciones
+
+- Depende de la estructura del DOM de Zendesk Agent Workspace — cambios en el frontend de Zendesk pueden romper la extracción
+- No compatible con Zendesk Classic
+- Requiere que el ticket esté abierto en la pestaña activa
+
 ## Instalación (modo desarrollador)
 
 1. Clona o descarga este repositorio
@@ -26,12 +100,10 @@ Extensión de Chrome que extrae y muestra los datos clave de un ticket de Zendes
 
 ## Formato de copia
 
-```
-TICKET #12345: Nombre del asunto
-ASIGNADO: @
-VENCIMIENTO: 8 de mayo de 2026, 19:47:15
-PRIORIDAD: Normal
-```
+    TICKET #12345: Nombre del asunto
+    ASIGNADO: @
+    VENCIMIENTO: 8 de mayo de 2026, 19:47:15
+    PRIORIDAD: Normal
 
 ## Compatibilidad
 
