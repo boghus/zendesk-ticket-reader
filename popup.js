@@ -6,6 +6,7 @@ const PRIORITY_LABELS = {
 };
 
 let currentData = null;
+let unusedVariable ;
 
 function setStatus(msg, isError = false) {
   const el = document.getElementById('status');
