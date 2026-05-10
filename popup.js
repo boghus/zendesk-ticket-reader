@@ -23,7 +23,7 @@ function renderEmpty(text) {
 }
 
 function renderPriority(raw) {
-  if (!raw) return renderEmpty('Sin prioridad');
+  if (!raw) {return renderEmpty('Sin prioridad');}
   const key = raw.toLowerCase().replace(/\s+/g, '_');
   const label = PRIORITY_LABELS[key] ?? raw;
   const cls = `priority-${key}`;
@@ -93,7 +93,7 @@ async function fetchTicketData() {
 document.getElementById('refresh-btn').addEventListener('click', fetchTicketData);
 
 document.getElementById('copy-btn').addEventListener('click', async () => {
-  if (!currentData) return;
+  if (!currentData) {return;}
   await navigator.clipboard.writeText(buildClipboardText(currentData));
   const btn = document.getElementById('copy-btn');
   btn.textContent = '¡Copiado!';
