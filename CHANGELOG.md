@@ -2,6 +2,8 @@
 
 ## [1.0.0] - 2026-05-08
 
+
+
 ### Added
 - Extracción de asunto, prioridad y fecha de vencimiento del ticket activo
 - Popup con visualización de los campos y badges de prioridad con colores
