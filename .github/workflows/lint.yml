@@ -7,12 +7,14 @@ on:
       - main
 
 jobs:
-  eslint:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -25,3 +27,10 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint
+
+      - name: Validate commits
+        run: |
+          npx commitlint \
+          --from ${{ github.event.pull_request.base.sha }} \
+          --to ${{ github.event.pull_request.head.sha }} \
+          --verbose
