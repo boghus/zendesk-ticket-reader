@@ -29,18 +29,18 @@ function isVisible(el) {
 function queryFirst(selectorList) {
   for (const sel of selectorList) {
     const match = [...document.querySelectorAll(sel)].find(isVisible);
-    if (match) return match;
+    if (match) {return match;}
   }
   return null;
 }
 
 function extractText(el) {
-  if (!el) return null;
+  if (!el) {return null;}
   return (el.value || el.textContent || el.innerText || '').trim() || null;
 }
 
 function extractDueDate(el) {
-  if (!el) return null;
+  if (!el) {return null;}
   const dt = el.getAttribute?.('datetime');
   if (dt) {
     return new Date(dt).toLocaleString('es', {
