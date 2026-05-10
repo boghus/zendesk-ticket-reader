@@ -71,6 +71,26 @@ La extensión actúa como pipeline liviano entre la fuente de datos operacional 
 | Comunicación | Chrome Message Passing |
 | UI | HTML + CSS vanilla |
 | Integración | Clipboard API |
+| Build | esbuild |
+
+## Estructura del proyecto
+
+```
+src/
+  app/
+    popup/          # UI de la extensión (HTML, CSS, JS)
+    content/        # Content script — listener de mensajes
+  core/
+    services/       # Lógica de extracción del ticket
+  shared/
+    constants/      # Selectores CSS y etiquetas de prioridad
+    utils/          # Helpers de DOM y formateo
+  assets/
+    icons/
+  manifest.json
+
+dist/               # Output del build (cargar esto en Chrome)
+```
 
 ## Decisiones de diseño
 
@@ -86,10 +106,12 @@ La extensión actúa como pipeline liviano entre la fuente de datos operacional 
 
 ## Instalación (modo desarrollador)
 
-1. Clona o descarga este repositorio
-2. Abre Chrome y ve a `chrome://extensions`
-3. Activa **Modo desarrollador** (esquina superior derecha)
-4. Haz clic en **Cargar descomprimida** y selecciona la carpeta del proyecto
+1. Clona este repositorio
+2. Instala dependencias: `npm install`
+3. Genera el build: `npm run build`
+4. Abre Chrome y ve a `chrome://extensions`
+5. Activa **Modo desarrollador** (esquina superior derecha)
+6. Haz clic en **Cargar descomprimida** y selecciona la carpeta `dist/`
 
 ## Uso
 

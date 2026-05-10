@@ -1,9 +1,5 @@
-const PRIORITY_LABELS = {
-  urgent: 'Urgente',
-  high: 'Alta',
-  normal: 'Normal',
-  low: 'Baja',
-};
+import { PRIORITY_LABELS } from '../../shared/constants/labels.js';
+import { buildClipboardText } from '../../shared/utils/format.js';
 
 let currentData = null;
 
@@ -23,7 +19,7 @@ function renderEmpty(text) {
 }
 
 function renderPriority(raw) {
-  if (!raw) {return renderEmpty('Sin prioridad');}
+  if (!raw) { return renderEmpty('Sin prioridad'); }
   const key = raw.toLowerCase().replace(/\s+/g, '_');
   const label = PRIORITY_LABELS[key] ?? raw;
   const cls = `priority-${key}`;
@@ -42,28 +38,13 @@ function renderField(id, value, emptyMsg) {
 
 function showData(data) {
   currentData = data;
-
   document.getElementById('ticket-id').textContent = data.ticketId ? `#${data.ticketId}` : '—';
-
   renderField('field-subject', data.subject, 'No encontrado');
   document.getElementById('field-priority').innerHTML = renderPriority(data.priority);
   renderField('field-due-date', data.dueDate, 'Sin fecha asignada');
-
   document.getElementById('status').style.display = 'none';
   document.getElementById('data-content').style.display = 'flex';
   document.getElementById('btn-row').style.display = 'flex';
-}
-
-function buildClipboardText(data) {
-  const priority = data.priority || 'Sin prioridad';
-  const dueDate = data.dueDate || 'Sin fecha asignada';
-  return [
-    `TICKET #${data.ticketId}: ${data.subject || '—'}`,
-    data.url,
-    'ASIGNADO: @',
-    `VENCIMIENTO: ${dueDate}`,
-    `PRIORIDAD: ${priority}`,
-  ].join('\n');
 }
 
 async function fetchTicketData() {
@@ -93,7 +74,7 @@ async function fetchTicketData() {
 document.getElementById('refresh-btn').addEventListener('click', fetchTicketData);
 
 document.getElementById('copy-btn').addEventListener('click', async () => {
-  if (!currentData) {return;}
+  if (!currentData) { return; }
   await navigator.clipboard.writeText(buildClipboardText(currentData));
   const btn = document.getElementById('copy-btn');
   btn.textContent = '¡Copiado!';
