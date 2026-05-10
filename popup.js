@@ -60,7 +60,7 @@ function buildClipboardText(data) {
   return [
     `TICKET #${data.ticketId}: ${data.subject || '—'}`,
     data.url,
-    `ASIGNADO: @`,
+    'ASIGNADO: @',
     `VENCIMIENTO: ${dueDate}`,
     `PRIORIDAD: ${priority}`,
   ].join('\n');
