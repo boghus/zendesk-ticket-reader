@@ -1,8 +1,11 @@
 {
       "scripts": {
-            "lint": "eslint ."
+            "lint": "eslint .",
+            "commitlint": "commitlint --from HEAD~1 --to HEAD --verbose"
       },
       "devDependencies": {
+            "@commitlint/cli": "^21.0.0",
+            "@commitlint/config-conventional": "^21.0.0",
             "eslint": "^9.0.0",
             "globals": "^17.6.0"
       }
