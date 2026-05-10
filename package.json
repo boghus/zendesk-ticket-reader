@@ -2,7 +2,8 @@
       "scripts": {
             "lint": "eslint ."
       },
-        "devDependencies": {
-                "eslint": "^9.0.0"
-        }
+      "devDependencies": {
+            "eslint": "^9.0.0",
+            "globals": "^17.6.0"
+      }
 }
