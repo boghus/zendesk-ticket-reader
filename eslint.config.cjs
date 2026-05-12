@@ -2,39 +2,47 @@ const globals = require('globals');
 
 module.exports = [
   {
-    files: ['**/*.js'],
-
+    files: ['src/**/*.js'],
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: 'script',
-
+      sourceType: 'module',
       globals: {
         ...globals.browser,
-        chrome: 'readonly'
-      }
+        chrome: 'readonly',
+      },
     },
-
     rules: {
       semi: ['error', 'always'],
       quotes: ['error', 'single'],
-
       'no-unused-vars': 'error',
       'no-undef': 'error',
       'no-unreachable': 'error',
-
       eqeqeq: ['error', 'always'],
       curly: ['error', 'all'],
-
       'no-var': 'error',
       'prefer-const': 'error',
-
       'consistent-return': 'error',
       'no-shadow': 'error',
-
       'default-case': 'warn',
       'no-console': 'warn',
-
-      'eol-last': ['error', 'always']
-    }
-  }
+      'eol-last': ['error', 'always'],
+    },
+  },
+  {
+    files: ['build.js', '*.cjs'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'script',
+      globals: {
+        ...globals.node,
+      },
+    },
+    rules: {
+      semi: ['error', 'always'],
+      quotes: ['error', 'single'],
+      'no-unused-vars': 'error',
+      'no-undef': 'error',
+      'eol-last': ['error', 'always'],
+    },
+  },
 ];
