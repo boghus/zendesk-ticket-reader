@@ -72,6 +72,7 @@ La extensión actúa como pipeline liviano entre la fuente de datos operacional 
 | UI | HTML + CSS vanilla |
 | Integración | Clipboard API |
 | Build | esbuild |
+| Tests | Vitest + jsdom |
 
 ## Estructura del proyecto
 
@@ -89,14 +90,30 @@ src/
     icons/
   manifest.json
 
+tests/
+  unit/             # Tests unitarios (format, dom, ticketService)
+
 dist/               # Output del build (cargar esto en Chrome)
 ```
+
+## Tests
+
+```bash
+npm test                # corre los tests una vez
+npm run test:watch      # modo watch para desarrollo
+npm run test:coverage   # reporte de cobertura
+```
+
+Los tests viven en `tests/` a la misma altura que `src/`, separados del árbol de módulos que bundlea esbuild.
+
+La cobertura excluye `src/app/` (`popup.js`, `content.js`) porque esos archivos dependen de `chrome.tabs`, `chrome.scripting` y `chrome.runtime` — APIs que jsdom no puede simular. El resto (`src/core/`, `src/shared/`) tiene threshold de 80% en todas las métricas.
 
 ## Decisiones de diseño
 
 - **Sin backend** — toda la lógica corre en el browser, sin latencia ni dependencias externas
 - **Sin frameworks** — vanilla JS para mantener la extensión liviana y sin superficie de ataque
 - **Content script sobre API** — evita exponer credenciales de Zendesk, lee directo del DOM
+- **Coverage provider v8** — corre en el mismo runtime de Node sin instrumentación extra, más rápido que istanbul para código sin transpilación compleja
 
 ## Limitaciones
 
