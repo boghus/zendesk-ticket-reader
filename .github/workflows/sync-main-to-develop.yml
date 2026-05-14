@@ -54,8 +54,34 @@ jobs:
           gh pr create \
             --base develop \
             --head sync/main-to-develop \
-            --title "Sync main -> develop" \
-            --body "PR automático de sincronización de main hacia develop." \
+            --title "Sincronizacion de cambios de main a develop" \
+            --body "
+          ## 📦 Descripción
+          PR automático generado para sincronizar cambios desde \`main\` hacia \`develop\`.
+
+          ## 🔄 Objetivo
+          Mantener \`develop\` alineado con los cambios ya desplegados o integrados en producción.
+
+          ## ⚠️ Validaciones
+          - Revisar posibles conflictos o cambios inesperados.
+          - Confirmar que CI/CD y validaciones automáticas se encuentren en estado correcto.
+
+          ## 🤖 Automatización
+          Este PR fue generado automáticamente mediante GitHub Actions.
+          " \
           || gh pr edit sync/main-to-develop \
-            --title "Sync main -> develop" \
-            --body "PR automático de sincronización de main hacia develop."
+            --title "Sincronizacion de cambios de main a develop" \
+            --body "
+          ## 📦 Descripción
+          PR automático generado para sincronizar cambios desde \`main\` hacia \`develop\`.
+
+          ## 🔄 Objetivo
+          Mantener \`develop\` alineado con los cambios ya desplegados o integrados en producción.
+
+          ## ⚠️ Validaciones
+          - Revisar posibles conflictos o cambios inesperados.
+          - Confirmar que CI/CD y validaciones automáticas se encuentren en estado correcto.
+
+          ## 🤖 Automatización
+          Este PR fue generado automáticamente mediante GitHub Actions.
+          "
