@@ -1,0 +1,61 @@
+name: Sincronización main → develop
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-main-to-develop
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Verificar que develop existe en remoto
+        run: |
+          git fetch origin
+          if ! git ls-remote --exit-code origin develop; then
+            echo "La rama 'develop' no existe en remoto. Abortando."
+            exit 1
+          fi
+
+      - name: Preparar rama de sincronización
+        run: |
+          git checkout -b sync/main-to-develop origin/develop
+
+          if ! git merge origin/main --no-edit; then
+            echo "Conflicto de merge detectado entre main y develop. Resolución manual requerida."
+            exit 1
+          fi
+
+          git push origin sync/main-to-develop --force-with-lease
+
+      - name: Crear o actualizar PR de sincronización
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --base develop \
+            --head sync/main-to-develop \
+            --title "Sync main -> develop" \
+            --body "PR automático de sincronización de main hacia develop." \
+          || gh pr edit sync/main-to-develop \
+            --title "Sync main -> develop" \
+            --body "PR automático de sincronización de main hacia develop."
