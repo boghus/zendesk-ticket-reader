@@ -46,7 +46,8 @@ jobs:
             echo "HAS_CONFLICTS=false" >> $GITHUB_ENV
           else
             echo "HAS_CONFLICTS=true" >> $GITHUB_ENV
-            git merge --abort || true
+            git add .
+            git commit -m "chore: fusionar main en develop (requiere resolución de conflictos)"
           fi
 
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
@@ -80,13 +81,11 @@ jobs:
 
           PR_TITLE="Sincronizacion de cambios de main a develop"
 
-          gh pr create \
+          if ! gh pr create \
             --base develop \
             --head "$BRANCH" \
             --title "$PR_TITLE" \
-            --body "$PR_BODY" \
-          || gh pr edit \
-            --base develop \
-            --head "$BRANCH" \
-            --title "$PR_TITLE" \
-            --body "$PR_BODY"
+            --body "$PR_BODY"; then
+            PR_NUMBER=$(gh pr list --head "$BRANCH" --base develop --json number --jq '.[0].number')
+            gh pr edit "$PR_NUMBER" --title "$PR_TITLE" --body "$PR_BODY"
+          fi
