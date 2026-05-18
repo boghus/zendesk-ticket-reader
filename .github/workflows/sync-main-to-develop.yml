@@ -16,7 +16,14 @@ concurrency:
 
 jobs:
   sync:
+    if: |
+      github.actor != 'github-actions[bot]' &&
+      !startsWith(github.ref_name, 'sync/')
+
     runs-on: ubuntu-latest
+
+    env:
+      HAS_CONFLICTS: false
 
     steps:
       - uses: actions/checkout@v4
@@ -31,57 +38,58 @@ jobs:
       - name: Verificar que develop existe en remoto
         run: |
           git fetch origin
-          if ! git ls-remote --exit-code origin develop; then
-            echo "La rama 'develop' no existe en remoto. Abortando."
-            exit 1
+
+          git checkout -B sync/main-to-develop origin/develop
+
+          if ! git merge origin/main \
+            --no-ff \
+            --no-edit; then
+
+            echo "HAS_CONFLICTS=true" >> $GITHUB_ENV
           fi
 
       - name: Preparar rama de sincronización
         run: |
-          git checkout -b sync/main-to-develop origin/develop
-
-          if ! git merge origin/main --no-edit; then
-            echo "Conflicto de merge detectado entre main y develop. Resolución manual requerida."
-            exit 1
+          if git diff --quiet origin/develop..HEAD; then
+            echo "No se detectaron cambios"
+            exit 0
           fi
 
+      - name: Publicar rama de sincronización
+        run: |
           git push origin sync/main-to-develop --force-with-lease
 
       - name: Crear o actualizar PR de sincronización
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
         run: |
+          PR_BODY=$(cat <<EOF
+          ## 📦 Descripción
+          PR automático generado para sincronizar cambios desde \`main\` hacia \`develop\`.
+
+          ## 🔄 Objetivo
+          Mantener \`develop\` alineado con los cambios ya desplegados o integrados en producción.
+
+          ## ⚠️ Estaus de Conflictos
+          $(if [ "$HAS_CONFLICTS" = "true" ]; then
+            echo "Conflictos detectados. Por favor, resuélvelos manualmente."
+          else
+            echo "Sin conflictos detectados. PR listo para revisión y merge automático."
+          fi)
+
+          ## 🤖 Automatización
+          Este PR fue generado automáticamente mediante GitHub Actions.
+          EOF
+          )
+
+          PR_TITLE="Sincronizacion de cambios de main a develop"
+
           gh pr create \
             --base develop \
             --head sync/main-to-develop \
-            --title "Sincronizacion de cambios de main a develop" \
-            --body "
-          ## 📦 Descripción
-          PR automático generado para sincronizar cambios desde \`main\` hacia \`develop\`.
-
-          ## 🔄 Objetivo
-          Mantener \`develop\` alineado con los cambios ya desplegados o integrados en producción.
-
-          ## ⚠️ Validaciones
-          - Revisar posibles conflictos o cambios inesperados.
-          - Confirmar que CI/CD y validaciones automáticas se encuentren en estado correcto.
-
-          ## 🤖 Automatización
-          Este PR fue generado automáticamente mediante GitHub Actions.
-          " \
+            --title "$PR_TITLE" \
+            --body "$PR_BODY" \
           || gh pr edit sync/main-to-develop \
-            --title "Sincronizacion de cambios de main a develop" \
-            --body "
-          ## 📦 Descripción
-          PR automático generado para sincronizar cambios desde \`main\` hacia \`develop\`.
-
-          ## 🔄 Objetivo
-          Mantener \`develop\` alineado con los cambios ya desplegados o integrados en producción.
-
-          ## ⚠️ Validaciones
-          - Revisar posibles conflictos o cambios inesperados.
-          - Confirmar que CI/CD y validaciones automáticas se encuentren en estado correcto.
-
-          ## 🤖 Automatización
-          Este PR fue generado automáticamente mediante GitHub Actions.
-          "
+            --title "$PR_TITLE" \
+            --body "$PR_BODY"
