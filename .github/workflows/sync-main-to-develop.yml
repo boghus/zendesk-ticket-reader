@@ -46,8 +46,8 @@ jobs:
             echo "HAS_CONFLICTS=false" >> $GITHUB_ENV
           else
             echo "HAS_CONFLICTS=true" >> $GITHUB_ENV
-            git add .
-            git commit -m "chore: fusionar main en develop (requiere resolución de conflictos)"
+            git merge --abort || true
+            git checkout -B "$BRANCH" origin/main
           fi
 
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
