@@ -22,47 +22,42 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    env:
-      HAS_CONFLICTS: false
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Configure Git
+      - name: Configurar Git
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-      - name: Verificar que develop existe en remoto
+      - name: Actualizar referencias
+        run: git fetch origin
+
+      - name: Verificar si hay conflictos
         run: |
-          git fetch origin
+          BRANCH="sync/main-to-develop"
 
-          git checkout -B sync/main-to-develop origin/develop
+          git checkout -B "$BRANCH" origin/develop
 
-          if ! git merge origin/main \
-            --no-ff \
-            --no-edit; then
-
+          if git merge origin/main --no-ff --no-edit; then
+            echo "HAS_CONFLICTS=false" >> $GITHUB_ENV
+          else
             echo "HAS_CONFLICTS=true" >> $GITHUB_ENV
+            git merge --abort || true
           fi
 
-      - name: Preparar rama de sincronización
-        run: |
-          if git diff --quiet origin/develop..HEAD; then
-            echo "No se detectaron cambios"
-            exit 0
-          fi
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
 
       - name: Publicar rama de sincronización
         run: |
-          git push origin sync/main-to-develop --force-with-lease
+          git push origin "$BRANCH" --force-with-lease
 
       - name: Crear o actualizar PR de sincronización
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
         run: |
           PR_BODY=$(cat <<EOF
           ## 📦 Descripción
@@ -87,9 +82,11 @@ jobs:
 
           gh pr create \
             --base develop \
-            --head sync/main-to-develop \
+            --head "$BRANCH" \
             --title "$PR_TITLE" \
             --body "$PR_BODY" \
-          || gh pr edit sync/main-to-develop \
+          || gh pr edit \
+            --base develop \
+            --head "$BRANCH" \
             --title "$PR_TITLE" \
             --body "$PR_BODY"
