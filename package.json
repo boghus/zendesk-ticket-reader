@@ -9,6 +9,8 @@
             "@commitlint/config-conventional": "^21.0.0",
             "esbuild": "^0.28.0",
             "eslint": "^9.0.0",
-            "globals": "^17.6.0"
+            "eslint-plugin-yml": "^3.3.2",
+            "globals": "^17.6.0",
+            "yaml-eslint-parser": "^2.0.0"
       }
 }

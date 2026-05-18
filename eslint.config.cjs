@@ -1,6 +1,16 @@
 const globals = require('globals');
+const yml = require('eslint-plugin-yml');
+const yamlParser = require('yaml-eslint-parser');
 
 module.exports = [
+  {
+    ignores: [
+      'dist/**',
+      'coverage/**',
+      'node_modules/**',
+      '*.min.js',
+    ],
+  },
   {
     files: ['src/**/*.js'],
     languageOptions: {
@@ -45,4 +55,19 @@ module.exports = [
       'eol-last': ['error', 'always'],
     },
   },
+  {
+    files: ['**/*.yml', '**/*.yaml'],
+    plugins: {
+      yml,
+    },
+    languageOptions: {
+      parser: yamlParser,
+    },
+    rules: {
+      'yml/no-empty-document': 'error',
+      'yml/no-irregular-whitespace': 'error',
+      'yml/quotes': ['error', { prefer: 'single' }],
+      'eol-last': ['error', 'always'],
+    },
+  }
 ];
