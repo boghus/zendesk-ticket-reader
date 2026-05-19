@@ -42,7 +42,7 @@ module.exports = [
     files: ['build.js', '*.cjs'],
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: 'script',
+      sourceType: 'module',
       globals: {
         ...globals.node,
       },

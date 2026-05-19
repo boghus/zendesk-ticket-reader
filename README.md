@@ -1,6 +1,6 @@
 # Zendesk Ticket Reader
 
-Extensión de Chrome que extrae y muestra los datos clave de un ticket de Zendesk: asunto, prioridad y fecha de vencimiento, con opción de copiarlo al portapapeles en formato de texto listo para pegar en Slack o cualquier chat.
+Extensión de Chrome que extrae y muestra los datos clave de un ticket de Zendesk: asunto, prioridad y fecha de vencimiento, con opción de copiarlo al portapapeles en formato de texto listo para pegar en Google Chat o cualquier chat.
 
 ## Funcionalidades
 
@@ -17,7 +17,7 @@ La extensión automatiza tareas repetitivas del flujo operacional en Zendesk:
 - **Extracción automática de metadata del ticket** — lee asunto, prioridad y vencimiento sin intervención manual
 - **Traducción de prioridades** — convierte los valores del sistema al español en tiempo real
 - **Formateo de fechas** — transforma timestamps ISO a formato legible en español
-- **Generación de texto listo para Slack** — arma el mensaje con estructura fija, lista para pegar
+- **Generación de texto listo para Google Chat** — arma el mensaje con estructura fija, lista para pegar
 - **Copia inmediata al portapapeles** — un solo clic, sin seleccionar ni formatear nada
 
 Reduciendo fricción manual y errores al compartir contexto entre equipos.
@@ -31,7 +31,7 @@ Reduciendo fricción manual y errores al compartir contexto entre equipos.
 3. Buscar y leer la prioridad
 4. Buscar y formatear la fecha de vencimiento
 5. Armar el mensaje a mano
-6. Pegarlo en Slack
+6. Pegarlo en Google Chat
 
 **Con la extensión:**
 
@@ -51,7 +51,7 @@ flowchart TD
     B --> C[Transformación de datos]
     C --> D[Formato operativo]
     D --> E[Clipboard API]
-    E --> F[💬 Slack / Chat interno]
+    E --> F[💬 Google Chat / Chat interno]
 ```
 
 La extensión actúa como pipeline liviano entre la fuente de datos operacional y el canal de comunicación del equipo, sin intervención manual en ningún paso intermedio.
@@ -61,7 +61,7 @@ La extensión actúa como pipeline liviano entre la fuente de datos operacional 
 - **Escalamiento a ingeniería** — adjuntá el contexto del ticket en segundos al abrir un issue o thread
 - **Comunicación soporte ↔ operaciones** — estandarizá el formato al pasar tickets entre equipos
 - **Seguimiento de tickets críticos** — compartí prioridad y vencimiento sin abrir Zendesk
-- **Compartir contexto rápidamente en Slack** — un clic y el mensaje está listo para pegar
+- **Compartir contexto rápidamente en Google Chat** — un clic y el mensaje está listo para pegar
 
 ## Stack
 
@@ -139,10 +139,14 @@ La cobertura excluye `src/app/` (`popup.js`, `content.js`) porque esos archivos 
 
 ## Formato de copia
 
-    TICKET #12345: Nombre del asunto
-    ASIGNADO: @
-    VENCIMIENTO: 8 de mayo de 2026, 19:47:15
-    PRIORIDAD: Normal
+El texto generado utiliza [sintaxis markdown](https://support.google.com/chat/answer/7649118#use-markdown-formatting-desktop) compatible con Google Chat
+
+    *TICKET* #12345: Nombre del asunto
+    *ASIGNADO*: @
+    *VENCIMIENTO*: 8 de mayo de 2026, 19:47:15
+    *PRIORIDAD*: Normal
+
+   > ASIGNADO: @ actúa como placeholder para completar manualmente la mención del responsable en Google Chat. 
 
 ## Compatibilidad
 

@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { extractText, extractDueDate, buildClipboardText } from '../../src/shared/utils/format.js';
+import { describe, expect, it } from 'vitest';
+import { buildClipboardText, extractDueDate, extractText } from '../../src/shared/utils/format.js';
 
 describe('extractText', () => {
   it('retorna null cuando el elemento es null', () => {
@@ -55,10 +55,10 @@ describe('buildClipboardText', () => {
       dueDate: '20 de mayo de 2025',
     };
     const result = buildClipboardText(data);
-    expect(result).toContain('TICKET #123: Bug crítico');
+    expect(result).toContain('*TICKET #123*: Bug crítico');
     expect(result).toContain(data.url);
-    expect(result).toContain('VENCIMIENTO: 20 de mayo de 2025');
-    expect(result).toContain('PRIORIDAD: high');
+    expect(result).toContain('*VENCIMIENTO*: 20 de mayo de 2025');
+    expect(result).toContain('*PRIORIDAD*: high');
   });
 
   it('usa valores por defecto cuando faltan prioridad y fecha', () => {
@@ -70,6 +70,6 @@ describe('buildClipboardText', () => {
 
   it('usa — cuando falta el asunto', () => {
     const data = { ticketId: '1', subject: null, url: 'http://x.com', priority: null, dueDate: null };
-    expect(buildClipboardText(data)).toContain('TICKET #1: —');
+    expect(buildClipboardText(data)).toContain('*TICKET #1*: —');
   });
 });
