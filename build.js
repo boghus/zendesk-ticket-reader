@@ -1,6 +1,6 @@
-const esbuild = require('esbuild');
-const fs = require('fs');
-const path = require('path');
+import * as esbuild from 'esbuild';
+import fs from 'fs';
+import path from 'path';
 
 function copyDir(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
@@ -38,4 +38,4 @@ async function build() {
   copyDir('src/assets/icons', 'dist/icons');
 }
 
-build();
+await build();

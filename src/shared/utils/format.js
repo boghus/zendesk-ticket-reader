@@ -24,10 +24,10 @@ export function buildClipboardText(data) {
   const priority = data.priority || 'Sin prioridad';
   const dueDate = data.dueDate || 'Sin fecha asignada';
   return [
-    `TICKET #${data.ticketId}: ${data.subject || '—'}`,
+    `*TICKET #${data.ticketId}*: ${data.subject || '—'}`,
     data.url,
-    'ASIGNADO: @',
-    `VENCIMIENTO: ${dueDate}`,
-    `PRIORIDAD: ${priority}`,
+    '*ASIGNADO*: @',
+    `*VENCIMIENTO*: ${dueDate}`,
+    `*PRIORIDAD*: ${priority}`,
   ].join('\n');
 }
