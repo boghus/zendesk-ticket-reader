@@ -1,4 +1,21 @@
 # Changelog
+## [1.1.0] - 2026-05-19
+
+### Added
+- Mejora en la copia del mensaje del ticket con formato en negritas en el título
+- Workflow de GitHub Actions para ejecución de tests en CI
+
+### Changed
+- Ajustes en el proceso de sincronización entre ramas main y develop
+
+### Fixed
+- Corrección de dependencias en ESLint (eslint-plugin-yml incluido en lockfile)
+
+### Tests
+- Incorporación de pruebas de integración en el proyecto
+
+### Chore
+- Eliminación de archivo innecesario del repositorio
 
 ## [1.0.0] - 2026-05-08
 

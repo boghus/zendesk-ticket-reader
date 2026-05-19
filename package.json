@@ -1,16 +1,25 @@
 {
-      "scripts": {
-            "build": "node build.js",
-            "lint": "eslint .",
-            "commitlint": "commitlint --from HEAD~1 --to HEAD --verbose"
-      },
-      "devDependencies": {
-            "@commitlint/cli": "^21.0.0",
-            "@commitlint/config-conventional": "^21.0.0",
-            "esbuild": "^0.28.0",
-            "eslint": "^9.0.0",
-            "eslint-plugin-yml": "^3.3.2",
-            "globals": "^17.6.0",
-            "yaml-eslint-parser": "^2.0.0"
-      }
+  "type": "module",
+  "scripts": {
+    "build": "node build.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "commitlint": "commitlint --from HEAD~1 --to HEAD --verbose"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.0.0",
+    "@commitlint/config-conventional": "^21.0.0",
+    "@vitest/coverage-v8": "^4.1.6",
+    "esbuild": "^0.28.0",
+    "eslint": "^9.0.0",
+    "globals": "^17.6.0",
+    "jsdom": "^29.1.1",
+    "vitest": "^4.1.6"
+  },
+  "dependencies": {
+    "eslint-plugin-yml": "^3.3.2"
+  },
+  "version": "1.1.0"
 }
