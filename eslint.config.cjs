@@ -34,7 +34,7 @@ module.exports = [
       'consistent-return': 'error',
       'no-shadow': 'error',
       'default-case': 'warn',
-      'no-console': 'warn',
+      'no-console': ['error', { allow: ['warn', 'error'] }],
       'eol-last': ['error', 'always'],
     },
   },

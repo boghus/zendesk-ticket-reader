@@ -14,21 +14,21 @@ vi.mock('../../src/storage/storageService.js', () => ({
 
 vi.mock('../../src/config/defaultSelectors.json', () => ({
   default: {
-    subject: ['.old-subject'],
-    priority: ['.old-priority'],
+    subject: { selectors: ['.old-subject'], label: 'Asunto' },
+    priority: { selectors: ['.old-priority'], label: 'Prioridad' },
   },
 }));
 
 describe('SelectorsRepository', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Resetear el cache interno manual ya que es una propiedad estática
+    // Resetear el caché interno manual
     SelectorsRepository._cache = null;
   });
 
   describe('initialize', () => {
     it('debe cargar los selectores existentes si están en storage', async () => {
-      const mockData = { subject: ['.custom-subject'] };
+      const mockData = { subject: { selectors: ['.custom-subject'] } };
       StorageService.get.mockResolvedValue(mockData);
 
       await SelectorsRepository.initialize();
@@ -70,15 +70,18 @@ describe('SelectorsRepository', () => {
 
   describe('getByKey', () => {
     it('debe retornar los selectores de una clave específica', async () => {
-      SelectorsRepository._cache = { subject: ['.target'] };
+      // La estructura debe coincidir con el schema: { selectors: [], ... }
+      SelectorsRepository._cache = { 
+        subject: { selectors: ['.target'], label: 'Asunto' } 
+      };
       
       const result = await SelectorsRepository.getByKey('subject');
       
-      expect(result).toEqual(['.target']);
+      expect(result.selectors).toEqual(['.target']);
     });
 
     it('debe retornar un array vacío si la clave no existe', async () => {
-      SelectorsRepository._cache = { subject: ['.target'] };
+      SelectorsRepository._cache = { subject: { selectors: ['.target'] } };
       
       const result = await SelectorsRepository.getByKey('nonExistent');
       
@@ -88,8 +91,8 @@ describe('SelectorsRepository', () => {
 
   describe('update', () => {
     it('debe actualizar el cache y persistir en storage', async () => {
-      SelectorsRepository._cache = { subject: ['.old'] };
-      const newValue = ['.new'];
+      SelectorsRepository._cache = { subject: { selectors: ['.old'] } };
+      const newValue = { selectors: ['.new'], label: 'Asunto' };
 
       await SelectorsRepository.update('subject', newValue);
 
@@ -100,7 +103,7 @@ describe('SelectorsRepository', () => {
 
   describe('reset', () => {
     it('debe volver a los valores por defecto', async () => {
-      SelectorsRepository._cache = { subject: ['.modified'] };
+      SelectorsRepository._cache = { subject: { selectors: ['.modified'] } };
 
       await SelectorsRepository.reset();
 

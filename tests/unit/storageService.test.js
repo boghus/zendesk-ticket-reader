@@ -1,20 +1,21 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { StorageService } from '../../src/storage/storageService.js';
 
+// Mock global de la API chrome para evitar "ReferenceError: chrome is not defined"
+globalThis.chrome = {
+  storage: {
+    local: {
+      get: vi.fn(),
+      set: vi.fn(),
+      remove: vi.fn(),
+      clear: vi.fn(),
+    },
+  },
+};
+
 describe('StorageService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Mock global de la API chrome.storage.local para el entorno de test
-    globalThis.chrome = {
-      storage: {
-        local: {
-          get: vi.fn(),
-          set: vi.fn(),
-          remove: vi.fn(),
-          clear: vi.fn(),
-        },
-      },
-    };
   });
 
   describe('get', () => {
