@@ -20,6 +20,7 @@ function makeEl(textContent) {
 afterEach(() => {
   vi.useRealTimers();
   vi.resetModules();
+  vi.clearAllMocks();
 })
 
 describe('extractWhenReady — path inmediato (sin navegación reciente)', () => {

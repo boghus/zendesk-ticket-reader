@@ -1,0 +1,20 @@
+{
+  "subject": {
+    "selectors": ["input[data-test-id=\"omni-header-subject\"]"],
+    "extractor": "text",
+    "label": "Asunto",
+    "display": "text"
+  },
+  "priority": {
+    "selectors": ["[data-test-id=\"ticket-fields-priority-select\"] [data-garden-id=\"dropdowns.combobox.value\"]"],
+    "extractor": "text",
+    "label": "Prioridad",
+    "display": "priority"
+  },
+  "dueDate": {
+    "selectors": ["time[data-test-id=\"timestamp-relative\"]"],
+    "extractor": "dueDate",
+    "label": "Fecha de vencimiento",
+    "display": "text"
+  }
+}

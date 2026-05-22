@@ -1,3 +1,4 @@
+// TODO: eliminar este archivo y usar directamente DEFAULT_SELECTORS desde el config
 export const SELECTORS = {
   subject: [
     'input[data-test-id="omni-header-subject"]',
