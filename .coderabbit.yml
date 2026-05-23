@@ -1,0 +1,28 @@
+# .coderabbit.yml
+language: 'es' # Configura las respuestas de la IA en español
+
+reviews:
+  base_branches:
+    - 'main'
+    - 'develop'
+  poem: false
+  profile: 'chill' # Opciones: 'chill' (más relajado), 'assertive' (estricto)
+  auto_review:
+    enabled: true
+    drafts: false # Evita que revise PRs que aún están en borrador (Draft)
+  
+  # Archivos que CodeRabbit debe ignorar por completo
+  path_filters:
+    - '!**/node_modules/**'
+    - '!**/build/**'
+    - '!**/dist/**'
+    - '!**/*.md' # Ignora cambios solo de documentación si no deseas revisarlos
+
+  tools:
+    gitleaks: 
+      enabled: true   # Escanea el PR buscando llaves, tokens o credenciales expuestas por accidente
+    semgrep: 
+      enabled: true    # Análisis estático para detectar fallos de seguridad conocidos en el código
+
+chat:
+  enabled: true # Te permite responderle a la IA en el mismo PR para pedirle cambios o explicaciones
