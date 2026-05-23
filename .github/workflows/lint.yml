@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - develop
+      - sync/main-to-develop
 
 jobs:
   lint:
