@@ -1,28 +1,59 @@
 # .coderabbit.yml
-language: 'es' # Configura las respuestas de la IA en español
+language: 'es-ES'
+
+tone_instructions: |
+  Responde en español latinoamericano. 
+  Comentarios técnicos, breves y accionables.
+  Enfócate SOLO en el diff. Evita sugerir refactors ajenos al cambio o actuar
 
 reviews:
+  # Optimización de consumo: Desactiva el resumen global para evitar procesar archivos completos
+  high_level_summary: false 
+  instructions: |
+    Tu análisis debe centrarse única y exclusivamente en las líneas de código modificadas dentro del diff del Pull Request. 
+    Evita realizar sugerencias o comentarios sobre partes del archivo que no han sido alteradas en este cambio, 
+    manteniendo el contexto estrictamente en lo que se está enviando a revisión.
   base_branches:
     - 'main'
     - 'develop'
-  poem: false
-  profile: 'chill' # Opciones: 'chill' (más relajado), 'assertive' (estricto)
+  poem: false # Desactiva respuestas en formato de poema para mantener profesionalismo
+  profile: 'chill' # Perfil de revisión relajado para evitar ruido excesivo
   auto_review:
     enabled: true
-    drafts: false # Evita que revise PRs que aún están en borrador (Draft)
+    # Evita el consumo de tokens en PRs que aún están en estado de borrador (Draft)
+    drafts: false 
   
-  # Archivos que CodeRabbit debe ignorar por completo
+  # Filtros de ruta: Define qué archivos incluir y cuáles ignorar por completo
   path_filters:
-    - '!**/node_modules/**'
-    - '!**/build/**'
-    - '!**/dist/**'
-    - '!**/*.md' # Ignora cambios solo de documentación si no deseas revisarlos
+    - 'src/**'
+    - 'scripts/**'
+    - 'background/**'
+    - 'content/**'
+    - 'popup/**'
+    - '.github/workflows/**'
+    - '!dist/**'
+    - '!build/**'
+    - '!coverage/**'
+    - '!node_modules/**'
+    - '!vendor/**'
+    - '!tmp/**'
+    - '!**/*.min.js'
+    - '!**/*.bundle.js'
+    - '!package-lock.json'
+    - '!yarn.lock'
+    - '!pnpm-lock.yaml'
+    - '!**/*.md'
 
   tools:
+    # Escaneo de seguridad estático
     gitleaks: 
       enabled: true   # Escanea el PR buscando llaves, tokens o credenciales expuestas por accidente
     semgrep: 
       enabled: true    # Análisis estático para detectar fallos de seguridad conocidos en el código
 
+  path_instructions:
+    - path: '**/*.js'
+      instructions: 'Priorizar seguridad (XSS/inyección), manejo de errores asíncronos y evitar refactors fuera del diff.'
+
 chat:
-  enabled: true # Te permite responderle a la IA en el mismo PR para pedirle cambios o explicaciones
+  enabled: true # Habilita la interacción directa con la IA mediante comentarios en el PR
