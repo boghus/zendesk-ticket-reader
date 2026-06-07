@@ -1,41 +1,39 @@
 import * as esbuild from 'esbuild';
 import fs from 'fs';
-import path from 'path';
-
-function copyDir(src, dest) {
-  fs.mkdirSync(dest, { recursive: true });
-  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
-    const srcPath = path.join(src, entry.name);
-    const destPath = path.join(dest, entry.name);
-    if (entry.isDirectory()) {
-      copyDir(srcPath, destPath);
-    } else {
-      fs.copyFileSync(srcPath, destPath);
-    }
-  }
-}
 
 async function build() {
+  console.log('🚀 Iniciando build...');
   fs.rmSync('dist', { recursive: true, force: true });
+  fs.mkdirSync('dist', { recursive: true });
 
-  await esbuild.build({
-    entryPoints: ['src/app/popup/popup.js'],
-    bundle: true,
-    minify: true,
-    outfile: 'dist/popup.js',
-  });
+  const entryPoints = [
+    { in: 'src/app/popup/popup.js', out: 'dist/popup.js' },
+    { in: 'src/app/content/content.js', out: 'dist/content.js' },
+  ];
 
-  await esbuild.build({
-    entryPoints: ['src/app/content/content.js'],
-    bundle: true,
-    minify: true,
-    outfile: 'dist/content.js',
-  });
+  for (const entry of entryPoints) {
+    await esbuild.build({
+      entryPoints: [entry.in],
+      bundle: true,
+      minify: true,
+      sourcemap: true, // Facilita la revisión de Mozilla y el debugging
+      outfile: entry.out,
+      format: 'iife', // IIFE es más robusto para inyección de content scripts
+    });
+  }
 
   fs.copyFileSync('src/app/popup/popup.html', 'dist/popup.html');
   fs.copyFileSync('src/app/popup/popup.css', 'dist/popup.css');
   fs.copyFileSync('src/manifest.json', 'dist/manifest.json');
-  copyDir('src/assets/icons', 'dist/icons');
+  
+  // Usamos cpSync para simplificar la copia de directorios
+  fs.cpSync('src/assets/icons', 'dist/icons', { recursive: true });
+  
+  console.log('✅ Build completado con éxito.');
+  console.log('📂 Archivos generados en la carpeta /dist');
 }
 
-await build();
+await build().catch((err) => {
+  console.error('❌ Error durante el build:', err);
+  process.exit(1);
+});
