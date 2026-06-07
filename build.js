@@ -24,7 +24,14 @@ async function build() {
 
   fs.copyFileSync('src/app/popup/popup.html', 'dist/popup.html');
   fs.copyFileSync('src/app/popup/popup.css', 'dist/popup.css');
-  fs.copyFileSync('src/manifest.json', 'dist/manifest.json');
+
+  // Sincronización dinámica del manifest
+  const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
+  const manifest = JSON.parse(fs.readFileSync('src/manifest.json', 'utf-8'));
+  
+  manifest.version = pkg.version;
+  fs.writeFileSync('dist/manifest.json', JSON.stringify(manifest, null, 2));
+  console.log(`info: Manifest generado en dist/ con versión ${pkg.version}`);
   
   // Usamos cpSync para simplificar la copia de directorios
   fs.cpSync('src/assets/icons', 'dist/icons', { recursive: true });
