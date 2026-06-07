@@ -1,9 +1,13 @@
 import { extractWhenReady } from '../../core/services/ticketService.js';
+import { addRuntimeMessageListener } from '../../shared/platform/browserAdapter.js';
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+addRuntimeMessageListener((message) => {
   if (message.type === 'GET_TICKET_DATA') {
-    extractWhenReady().then(sendResponse);
-    return true;
+    return extractWhenReady()
+      .catch(error => {
+        return { error: error.message };
+      });
   }
-  return true;
+
+  return null;
 });

@@ -1,4 +1,5 @@
 import { PRIORITY_LABELS } from '../../shared/constants/labels.js';
+import { browserAPI } from '../../shared/platform/browserAdapter.js';
 import { buildClipboardText } from '../../shared/utils/format.js';
 
 let currentData = null;
@@ -37,6 +38,11 @@ function renderField(id, value, emptyMsg) {
 }
 
 function showData(data) {
+  if (data?.error) {
+    setStatus(data.error, true);
+    return;
+  }
+
   currentData = data;
   document.getElementById('ticket-id').textContent = data.ticketId ? `#${data.ticketId}` : '—';
   renderField('field-subject', data.subject, 'No encontrado');
@@ -47,27 +53,40 @@ function showData(data) {
   document.getElementById('btn-row').style.display = 'flex';
 }
 
+async function getActiveTab() {
+  const [tab] = await browserAPI.tabs.query({ active: true, currentWindow: true });
+  return tab;
+}
+
+async function readTicketData(tab) {
+  try {
+    return await browserAPI.tabs.sendMessage(tab.id, { type: 'GET_TICKET_DATA' });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('No se pudo leer el ticket con el content script actual.', error);
+  }
+
+  await browserAPI.scripting.executeScript({ target: { tabId: tab.id }, files: ['content.js'] });
+  return browserAPI.tabs.sendMessage(tab.id, { type: 'GET_TICKET_DATA' });
+}
+
 async function fetchTicketData() {
   setStatus('Leyendo ticket...');
 
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-  if (!tab?.url?.match(/zendesk\.com\/agent\/tickets\/\d+/)) {
-    setStatus('Abre un ticket de Zendesk para ver sus datos.', true);
-    return;
-  }
-
   try {
-    const response = await chrome.tabs.sendMessage(tab.id, { type: 'GET_TICKET_DATA' });
-    showData(response);
-  } catch {
-    try {
-      await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['content.js'] });
-      const response = await chrome.tabs.sendMessage(tab.id, { type: 'GET_TICKET_DATA' });
-      showData(response);
-    } catch {
-      setStatus('No se pudo leer el ticket. Recarga la página e intenta de nuevo.', true);
+    const tab = await getActiveTab();
+
+    if (!tab?.url?.match(/zendesk\.com\/agent\/tickets\/\d+/)) {
+      setStatus('Abre un ticket de Zendesk para ver sus datos.', true);
+      return;
     }
+
+    const response = await readTicketData(tab);
+    showData(response);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('No se pudo leer el ticket.', error);
+    setStatus('No se pudo leer el ticket. Recarga la página e intenta de nuevo.', true);
   }
 }
 

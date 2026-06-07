@@ -3,7 +3,13 @@
   "name": "Zendesk Ticket Reader",
   "version": "1.0.0",
   "description": "Lee y muestra los datos de tickets de Zendesk: asunto, prioridad y fecha de vencimiento.",
-  "permissions": ["activeTab", "scripting"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "zendesk-ticket-reader@boghus.github.io",
+      "strict_min_version": "109.0"
+    }
+  },
+  "permissions": ["activeTab", "scripting", "clipboardWrite"],
   "host_permissions": ["https://*.zendesk.com/*"],
   "action": {
     "default_popup": "popup.html",
