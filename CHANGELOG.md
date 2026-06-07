@@ -1,4 +1,10 @@
 # Changelog
+## [1.2.0] - 2026-05-20
+
+### Added
+- Sincronización automática de la versión en `manifest.json` tomando como fuente de verdad el `package.json` durante el proceso de build.
+- Incorporación de adaptador WebExtension para compatibilidad nativa con Chrome y Firefox (#37). Se normaliza el uso de APIs `chrome.*` (callbacks) y `browser.*` (promesas) para asegurar el flujo de mensajes entre el popup y el content script.
+
 ## [1.1.0] - 2026-05-19
 
 ### Added
