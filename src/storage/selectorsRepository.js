@@ -1,53 +1,40 @@
-import DEFAULT_SELECTORS from '../config/defaultSelectors.json';
-import { StorageService } from './storageService.js';
+import defaultSelectors from '../config/defaultSelectors.json';
+import StorageService from '../services/StorageService.js';
 
-const STORAGE_KEY = 'selectors';
+const STORAGE_KEY = 'zendesk_field_selectors';
 
 export class SelectorsRepository {
-  static _cache = null;
-
-  static async initialize() {
-    const existingSelectors = await StorageService.get(STORAGE_KEY);
-
-    if (existingSelectors) {
-      this._cache = existingSelectors;
-    } else {
-      await StorageService.set(STORAGE_KEY, DEFAULT_SELECTORS);
-      this._cache = DEFAULT_SELECTORS;
-    }
-  }
-
   static async getAll() {
-    if (!this._cache) {
-      await this.initialize();
+    const selectors = await StorageService.get(STORAGE_KEY);
+    if (!selectors || Object.keys(selectors).length === 0) {
+      await this.reset();
+      return defaultSelectors;
     }
-  
-    return this._cache;
+    return selectors;
   }
 
-  static async getByKey(key) {
+  static async getById(id) {
     const selectors = await this.getAll();
-
-    return selectors[key] || [];
+    return selectors[id] || null;
   }
 
-  static async update(key, value) {
+  static async save(id, selectorData) {
     const selectors = await this.getAll();
+    selectors[id] = { ...selectorData };
+    await StorageService.set(STORAGE_KEY, selectors);
+  }
 
-    selectors[key] = value;
-    this._cache = { ...selectors };
-
-    await StorageService.set(
-      STORAGE_KEY,
-      this._cache,
-    );
+  static async remove(id) {
+    const selectors = await this.getAll();
+    if (selectors[id]) {
+      delete selectors[id];
+      await StorageService.set(STORAGE_KEY, selectors);
+    }
   }
 
   static async reset() {
-    this._cache = DEFAULT_SELECTORS;
-    await StorageService.set(
-      STORAGE_KEY,
-      DEFAULT_SELECTORS,
-    );
+    await StorageService.set(STORAGE_KEY, defaultSelectors);
   }
 }
+
+export default SelectorsRepository;

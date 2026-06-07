@@ -32,9 +32,18 @@ async function build() {
     outfile: 'dist/content.js',
   });
 
+  await esbuild.build({
+    entryPoints: ['src/storage/options.js'],
+    bundle: true,
+    minify: true,
+    outfile: 'dist/options.js',
+  });
+
   fs.copyFileSync('src/app/popup/popup.html', 'dist/popup.html');
   fs.copyFileSync('src/app/popup/popup.css', 'dist/popup.css');
   fs.copyFileSync('src/manifest.json', 'dist/manifest.json');
+  fs.copyFileSync('src/storage/options.html', 'dist/options.html');
+  fs.copyFileSync('src/storage/options.css', 'dist/options.css');
   copyDir('src/assets/icons', 'dist/icons');
 }
 

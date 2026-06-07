@@ -5,6 +5,10 @@
   "description": "Lee y muestra los datos de tickets de Zendesk: asunto, prioridad y fecha de vencimiento.",
   "permissions": ["activeTab", "scripting", "storage"],
   "host_permissions": ["https://*.zendesk.com/*"],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

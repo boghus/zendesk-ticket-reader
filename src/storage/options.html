@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Configuración - Zendesk Ticket Reader</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container" id="app">
+    <h1>Configuración de Selectores</h1>
+    <button id="add-selector" class="btn-add">+ Agregar Nuevo Campo</button>
+    
+    <div id="selectors-list">
+      <!-- Aquí se renderizan los selectores de SelectorsRepository dinámicamente -->
+      <div class="loading">Cargando selectores...</div>
+    </div>
+
+    <button id="restore-defaults" class="btn-reset">Restaurar Valores por Defecto</button>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>
