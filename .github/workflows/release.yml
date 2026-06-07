@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Clonar repositorio
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
@@ -56,7 +56,7 @@ jobs:
           echo "DIST_ASSET=zendesk-ticket-reader-v${PACKAGE_VERSION}.zip" >> $GITHUB_ENV
 
       - name: Configurar Node.js
-        uses: actions/setup-node@60edb5dd545a775178f5252478337817473d27ca # v4.0.2
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
@@ -84,7 +84,7 @@ jobs:
 
       - name: Guardar asset de prueba
         if: env.DRY_RUN == 'true'
-        uses: actions/upload-artifact@65462800fd760344d1a7b687193114cf680128b0 # v4.3.3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.DIST_ASSET }}
           path: ${{ env.DIST_ASSET }}
