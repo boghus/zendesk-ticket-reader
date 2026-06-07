@@ -1,6 +1,6 @@
 # Zendesk Ticket Reader
 
-Extensión de Chrome que extrae y muestra los datos clave de un ticket de Zendesk: asunto, prioridad y fecha de vencimiento, con opción de copiarlo al portapapeles en formato de texto listo para pegar en Google Chat o cualquier chat.
+Extensión WebExtension compatible con Chrome y Firefox que extrae y muestra los datos clave de un ticket de Zendesk: asunto, prioridad y fecha de vencimiento, con opción de copiarlo al portapapeles en formato de texto listo para pegar en Google Chat o cualquier chat.
 
 ## Funcionalidades
 
@@ -67,8 +67,8 @@ La extensión actúa como pipeline liviano entre la fuente de datos operacional 
 
 | Capa | Tecnología |
 |------|-----------|
-| Extracción | Chrome Content Script (DOM API) |
-| Comunicación | Chrome Message Passing |
+| Extracción | WebExtension Content Script (DOM API) |
+| Comunicación | WebExtension Message Passing |
 | UI | HTML + CSS vanilla |
 | Integración | Clipboard API |
 | Build | esbuild |
@@ -85,6 +85,7 @@ src/
     services/       # Lógica de extracción del ticket
   shared/
     constants/      # Selectores CSS y etiquetas de prioridad
+    platform/       # Adaptadores del runtime WebExtension
     utils/          # Helpers de DOM y formateo
   assets/
     icons/
@@ -93,7 +94,7 @@ src/
 tests/
   unit/             # Tests unitarios (format, dom, ticketService)
 
-dist/               # Output del build (cargar esto en Chrome)
+dist/               # Output del build (cargar esto en Chrome o Firefox)
 ```
 
 ## Tests
@@ -106,7 +107,7 @@ npm run test:coverage   # reporte de cobertura
 
 Los tests viven en `tests/` a la misma altura que `src/`, separados del árbol de módulos que bundlea esbuild.
 
-La cobertura excluye `src/app/` (`popup.js`, `content.js`) porque esos archivos dependen de `chrome.tabs`, `chrome.scripting` y `chrome.runtime` — APIs que jsdom no puede simular. El resto (`src/core/`, `src/shared/`) tiene threshold de 80% en todas las métricas.
+La cobertura excluye `src/app/` (`popup.js`, `content.js`) porque esos archivos dependen de APIs WebExtension que jsdom no puede simular. El resto (`src/core/`, `src/shared/`) tiene threshold de 80% en todas las métricas.
 
 ## Decisiones de diseño
 
@@ -121,7 +122,7 @@ La cobertura excluye `src/app/` (`popup.js`, `content.js`) porque esos archivos 
 - No compatible con Zendesk Classic
 - Requiere que el ticket esté abierto en la pestaña activa
 
-## Instalación (modo desarrollador)
+## Instalación en Chrome (modo desarrollador)
 
 1. Clona este repositorio
 2. Instala dependencias: `npm install`
@@ -129,6 +130,17 @@ La cobertura excluye `src/app/` (`popup.js`, `content.js`) porque esos archivos 
 4. Abre Chrome y ve a `chrome://extensions`
 5. Activa **Modo desarrollador** (esquina superior derecha)
 6. Haz clic en **Cargar descomprimida** y selecciona la carpeta `dist/`
+
+## Instalación en Firefox (temporal)
+
+1. Clona este repositorio
+2. Instala dependencias: `npm install`
+3. Genera el build: `npm run build`
+4. Abre Firefox y ve a `about:debugging#/runtime/this-firefox`
+5. Haz clic en **Cargar complemento temporal**
+6. Selecciona `dist/manifest.json`
+
+Para publicar en Firefox Add-ons, comprime el contenido de `dist/` en un `.zip` después de ejecutar `npm run build`.
 
 ## Uso
 
@@ -150,4 +162,4 @@ El texto generado utiliza [sintaxis markdown](https://support.google.com/chat/an
 
 ## Compatibilidad
 
-Probado en Zendesk Agent Workspace (versión moderna). No compatible con Zendesk Classic.
+Probado en Zendesk Agent Workspace (versión moderna), Chrome y Firefox. No compatible con Zendesk Classic.
