@@ -1,0 +1,117 @@
+name: Release
+
+on:
+  release:
+    types:
+      - published
+
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Simula el release sin crear tags ni releases reales.
+        required: true
+        type: boolean
+        default: true
+      tag_name:
+        description: Tag a publicar (ej. v1.2.0). Obligatorio si dry_run es false.
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+env:
+  DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+  RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag_name || format('dry-run-{0}', github.sha) }}
+
+jobs:
+  release:
+    name: Generar release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Validar versión de package.json vs Tag
+        run: |
+          PACKAGE_VERSION=$(jq -r .version package.json)
+          # Limpiamos el prefijo 'v' del tag para comparar
+          CLEAN_TAG=${RELEASE_TAG#v}
+
+          echo "Versión en package.json: $PACKAGE_VERSION"
+          echo "Tag del release: $RELEASE_TAG"
+
+          # Solo validamos si no es un dry run
+          if [[ "$DRY_RUN" != "true" ]]; then
+            if [[ "$PACKAGE_VERSION" != "$CLEAN_TAG" ]]; then
+              echo "::error::Inconsistencia de versiones detectada!"
+              echo "::error::El package.json tiene la versión $PACKAGE_VERSION pero estás intentando publicar el tag $RELEASE_TAG."
+              exit 1
+            fi
+          fi
+
+          echo "DIST_ASSET=zendesk-ticket-reader-v${PACKAGE_VERSION}.zip" >> $GITHUB_ENV
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Ejecutar Lint
+        run: npm run lint
+
+      - name: Ejecutar Tests
+        run: npm run test
+
+      - name: Compilar extension
+        run: npm run build
+
+      - name: Empaquetar dist
+        run: zip -r "$DIST_ASSET" dist
+
+      - name: Validar asset generado
+        run: |
+          test -d dist
+          test -f "$DIST_ASSET"
+          unzip -l "$DIST_ASSET"
+
+      - name: Guardar asset de prueba
+        if: env.DRY_RUN == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.DIST_ASSET }}
+          path: ${{ env.DIST_ASSET }}
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Dry run del release
+        if: env.DRY_RUN == 'true'
+        run: |
+          echo "dry-run: true"
+          echo "No se crearan tags ni releases reales."
+          echo "Tag simulado: $RELEASE_TAG"
+          echo "Asset simulado: $DIST_ASSET"
+          ls -lh "$DIST_ASSET"
+
+      - name: Publicar release (GitHub CLI)
+        if: env.DRY_RUN != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
+            echo "El release $RELEASE_TAG ya existe. Subiendo asset..."
+            gh release upload "$RELEASE_TAG" "$DIST_ASSET" --clobber
+          else
+            echo "El release $RELEASE_TAG no existe. Creando uno nuevo..."
+            gh release create "$RELEASE_TAG" "$DIST_ASSET" \
+              --target "$GITHUB_REF_NAME" \
+              --title "$RELEASE_TAG" \
+              --generate-notes
+          fi
