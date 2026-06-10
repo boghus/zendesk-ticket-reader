@@ -82,7 +82,7 @@ src/
     popup/          # UI de la extensión (HTML, CSS, JS)
     content/        # Content script — listener de mensajes
   core/
-    services/       # Lógica de extracción del ticket
+    services/       # Lógica de extracción de tickets y sanitización (XSS)
   shared/
     constants/      # Selectores CSS y etiquetas de prioridad
     utils/          # Helpers de DOM y formateo
@@ -91,7 +91,7 @@ src/
   manifest.json
 
 tests/
-  unit/             # Tests unitarios (format, dom, ticketService)
+  unit/             # Tests unitarios (format, dom, ticketService, popup, sanitizerService)
 
 dist/               # Output del build (cargar esto en Chrome)
 ```
