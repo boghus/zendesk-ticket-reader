@@ -1,16 +1,17 @@
 import { PRIORITY_LABELS } from '../../shared/constants/labels.js';
 import { browserAPI } from '../../shared/platform/browserAdapter.js';
 import { buildClipboardText } from '../../shared/utils/format.js';
+import { SanitizerService } from '../../core/services/sanitizerService.js';
 
 let currentData = null;
 
-function setStatus(msg, isError = false) {
+export function setStatus(msg, isError = false) {
   const el = document.getElementById('status');
   el.style.display = 'block';
   el.className = isError ? 'error' : '';
   el.innerHTML = isError
-    ? `<strong>Error</strong><br>${msg}`
-    : `<div class="spinner"></div>${msg}`;
+    ? `<strong>Error</strong><br>${SanitizerService.escapeHtml(msg)}`
+    : `<div class="spinner"></div>${SanitizerService.escapeHtml(msg)}`;
   document.getElementById('data-content').style.display = 'none';
   document.getElementById('btn-row').style.display = 'none';
 }
