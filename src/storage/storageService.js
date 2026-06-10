@@ -1,3 +1,5 @@
+import { browserAPI } from '../shared/platform/browserAdapter.js';
+
 export class StorageService {
   /**
    * Obtiene uno o varios valores del almacenamiento.
@@ -6,7 +8,7 @@ export class StorageService {
    */
   static async get(key, defaultValue = null) {
     try {
-      const result = await chrome.storage.local.get(key);
+      const result = await browserAPI.storage.get(key);
 
       // Si pasaste un string, devolvemos el valor directo o el default
       if (typeof key === 'string') {
@@ -32,7 +34,7 @@ export class StorageService {
         ? { [keyOrObject]: value }
         : keyOrObject;
 
-      await chrome.storage.local.set(dataToSet);
+      await browserAPI.storage.set(dataToSet);
     } catch (error) {
       console.error('[StorageService] Error setting data', keyOrObject, error);
       throw error;
@@ -41,7 +43,7 @@ export class StorageService {
 
   static async remove(key) {
     try {
-      await chrome.storage.local.remove(key);
+      await browserAPI.storage.remove(key);
     } catch (error) {
       console.error('[StorageService] Error removing key:', key, error);
       throw error;
@@ -50,7 +52,7 @@ export class StorageService {
 
   static async clear() {
     try {
-      await chrome.storage.local.clear();
+      await browserAPI.storage.clear();
     } catch (error) {
       console.error('[StorageService] Error clearing storage', error);
       throw error;
