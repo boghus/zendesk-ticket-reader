@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Zendesk Ticket Reader",
+  "name": "Ticket Reader for Zendesk",
   "version": "1.0.0",
   "description": "Lee y muestra los datos de tickets de Zendesk: asunto, prioridad y fecha de vencimiento.",
   "browser_specific_settings": {

@@ -1,4 +1,4 @@
-# Zendesk Ticket Reader
+# Ticket Reader for Zendesk
 
 Extensión WebExtension compatible con Chrome y Firefox que extrae y muestra los datos clave de un ticket de Zendesk: asunto, prioridad y fecha de vencimiento, con opción de copiarlo al portapapeles en formato de texto listo para pegar en Google Chat o cualquier chat.
 
