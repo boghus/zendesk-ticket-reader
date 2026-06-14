@@ -16,7 +16,8 @@
     "eslint": "^9.0.0",
     "globals": "^17.6.0",
     "jsdom": "^29.1.1",
-    "vitest": "^4.1.6"
+    "vitest": "^4.1.6",
+    "web-ext": "^10.4.0"
   },
   "dependencies": {
     "eslint-plugin-yml": "^3.3.2"
