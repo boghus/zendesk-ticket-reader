@@ -4,7 +4,7 @@ import { buildClipboardText } from '../../shared/utils/format.js';
 
 let currentData = null;
 
-function setStatus(msg, isError = false) {
+export function setStatus(msg, isError = false) {
   const el = document.getElementById('status');
 
   el.style.display = 'block';

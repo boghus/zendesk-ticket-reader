@@ -1,9 +1,32 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+// Mock global de la API chrome para evitar "ReferenceError: chrome is not defined"
+globalThis.chrome = {
+  storage: {
+    local: {
+      get: vi.fn(),
+      set: vi.fn(),
+    },
+  },
+};
+
 vi.mock('../../src/shared/utils/dom.js', () => ({
   queryFirst: vi.fn(),
-}))
+}));
+
+// Mock de SelectorsRepository para desacoplar el servicio del almacenamiento
+vi.mock('../../src/storage/selectorsRepository.js', () => ({
+  SelectorsRepository: {
+    getAll: vi.fn().mockResolvedValue({
+      subject: { selectors: ['.mock-selector-subject'] },
+      priority: { selectors: ['.mock-selector-priority'] },
+      dueDate: { selectors: ['.mock-selector-dueDate'] },
+    }),
+    getByKey: vi.fn().mockImplementation((key) => ({ selectors: [`.mock-selector-${key}`] })),
+    initialize: vi.fn().mockResolvedValue(undefined),
+  },
+}));
 
 function mockLocation(href, pathname) {
   Object.defineProperty(window, 'location', {
@@ -20,6 +43,7 @@ function makeEl(textContent) {
 afterEach(() => {
   vi.useRealTimers();
   vi.resetModules();
+  vi.clearAllMocks();
 })
 
 describe('extractWhenReady — path inmediato (sin navegación reciente)', () => {
