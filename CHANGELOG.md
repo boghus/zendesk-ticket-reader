@@ -1,4 +1,12 @@
 # Changelog
+## [1.2.1] - 2026-06-14
+
+### Added
+- Se agrega politica de privacidad para publicar en Chrome Store
+- Se agregar compatibilidad en codigo para una extension firefox
+- Se empaqueta el .zip para una extension para publicar en firefox
+- Incorporar los recursos visuales para chrome store
+
 ## [1.2.0] - 2026-05-20
 
 ### Added
