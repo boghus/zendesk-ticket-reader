@@ -1,10 +1,11 @@
 import { PRIORITY_LABELS } from '../../shared/constants/labels.js';
 import { browserAPI } from '../../shared/platform/browserAdapter.js';
 import { buildClipboardText } from '../../shared/utils/format.js';
+import { SanitizerService } from '../../core/services/sanitizerService.js';
 
 let currentData = null;
 
-function setStatus(msg, isError = false) {
+export function setStatus(msg, isError = false) {
   const el = document.getElementById('status');
 
   el.style.display = 'block';
@@ -18,13 +19,13 @@ function setStatus(msg, isError = false) {
 
     el.appendChild(strong);
     el.appendChild(document.createElement('br'));
-    el.appendChild(document.createTextNode(msg));
+    el.appendChild(document.createTextNode(SanitizerService.escapeHtml(msg)));
   } else {
     const spinner = document.createElement('div');
     spinner.className = 'spinner';
 
     el.appendChild(spinner);
-    el.appendChild(document.createTextNode(msg));
+    el.appendChild(document.createTextNode(SanitizerService.escapeHtml(msg)));
   }
 
   document.getElementById('data-content').style.display = 'none';
