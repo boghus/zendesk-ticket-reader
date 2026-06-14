@@ -53,7 +53,7 @@ jobs:
             fi
           fi
 
-          echo "DIST_ASSET=zendesk-ticket-reader-v${PACKAGE_VERSION}.zip" >> $GITHUB_ENV
+          echo "DIST_ASSET=ticket-reader-for-zendesk-v${PACKAGE_VERSION}.zip" >> $GITHUB_ENV
 
       - name: Configurar Node.js
         uses: actions/setup-node@v4
@@ -73,13 +73,19 @@ jobs:
       - name: Compilar extension
         run: npm run build
 
-      - name: Empaquetar dist
-        run: zip -r "$DIST_ASSET" dist
+      - name: Run web-ext validation
+        run: npx web-ext lint --source-dir ./dist || true
+
+      - name: Empaquetar extensión
+        run: |
+          cd dist
+          zip -r "../$DIST_ASSET" .
 
       - name: Validar asset generado
         run: |
           test -d dist
           test -f "$DIST_ASSET"
+          echo "Contenido del ZIP:"
           unzip -l "$DIST_ASSET"
 
       - name: Guardar asset de prueba

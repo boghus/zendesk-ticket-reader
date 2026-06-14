@@ -1,40 +1,67 @@
 import { PRIORITY_LABELS } from '../../shared/constants/labels.js';
 import { browserAPI } from '../../shared/platform/browserAdapter.js';
 import { buildClipboardText } from '../../shared/utils/format.js';
-import { SanitizerService } from '../../core/services/sanitizerService.js';
 
 let currentData = null;
 
 export function setStatus(msg, isError = false) {
   const el = document.getElementById('status');
+
   el.style.display = 'block';
   el.className = isError ? 'error' : '';
-  el.innerHTML = isError
-    ? `<strong>Error</strong><br>${SanitizerService.escapeHtml(msg)}`
-    : `<div class="spinner"></div>${SanitizerService.escapeHtml(msg)}`;
+
+  el.replaceChildren();
+
+  if (isError) {
+    const strong = document.createElement('strong');
+    strong.textContent = 'Error';
+
+    el.appendChild(strong);
+    el.appendChild(document.createElement('br'));
+    el.appendChild(document.createTextNode(msg));
+  } else {
+    const spinner = document.createElement('div');
+    spinner.className = 'spinner';
+
+    el.appendChild(spinner);
+    el.appendChild(document.createTextNode(msg));
+  }
+
   document.getElementById('data-content').style.display = 'none';
   document.getElementById('btn-row').style.display = 'none';
 }
 
-function renderEmpty(text) {
-  return `<span class="empty">${text}</span>`;
-}
+function renderPriority(el, raw) {
+  el.replaceChildren();
+  el.classList.remove('empty');
 
-function renderPriority(raw) {
-  if (!raw) { return renderEmpty('Sin prioridad'); }
+  if (!raw) {
+    el.textContent = 'Sin prioridad';
+    el.classList.add('empty');
+    return;
+  }
+
   const key = raw.toLowerCase().replace(/\s+/g, '_');
   const label = PRIORITY_LABELS[key] ?? raw;
-  const cls = `priority-${key}`;
-  return `<span class="priority-badge ${cls}">${label}</span>`;
+
+  const badge = document.createElement('span');
+  badge.className = `priority-badge priority-${key}`;
+  badge.textContent = label;
+
+  el.appendChild(badge);
 }
 
 function renderField(id, value, emptyMsg) {
   const el = document.getElementById(id);
+
+  el.replaceChildren();
+
   if (value) {
     el.textContent = value;
     el.classList.remove('empty');
   } else {
-    el.innerHTML = renderEmpty(emptyMsg);
+    el.textContent = emptyMsg;
+    el.classList.add('empty');
   }
 }
 
@@ -47,7 +74,7 @@ function showData(data) {
   currentData = data;
   document.getElementById('ticket-id').textContent = data.ticketId ? `#${data.ticketId}` : '—';
   renderField('field-subject', data.subject, 'No encontrado');
-  document.getElementById('field-priority').innerHTML = renderPriority(data.priority);
+  renderPriority(document.getElementById('field-priority'), data.priority);
   renderField('field-due-date', data.dueDate, 'Sin fecha asignada');
   document.getElementById('status').style.display = 'none';
   document.getElementById('data-content').style.display = 'flex';
