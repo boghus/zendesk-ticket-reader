@@ -183,4 +183,68 @@ describe('adaptador de navegador', () => {
     expect(listener({ type: 'GET_TICKET_DATA' }, {}, sendResponse)).toBe(false);
     expect(sendResponse).toHaveBeenCalledWith({ error: 'Handler failed' });
   });
+  it('usa APIs storage basadas en promesas cuando están disponibles', async () => {
+    const get = vi.fn().mockResolvedValue({ key: 'value' });
+    const set = vi.fn().mockResolvedValue(undefined);
+    const remove = vi.fn().mockResolvedValue(undefined);
+    const clear = vi.fn().mockResolvedValue(undefined);
+
+    globalThis.browser = {
+      storage: { local: { get, set, remove, clear } },
+      runtime: { onMessage: { addListener: vi.fn() } },
+    };
+
+    const { browserAPI } = await loadBrowserUtils();
+
+    await expect(browserAPI.storage.get('key')).resolves.toEqual({ key: 'value' });
+    await expect(browserAPI.storage.set({ key: 'value' })).resolves.toBeUndefined();
+    await expect(browserAPI.storage.remove('key')).resolves.toBeUndefined();
+    await expect(browserAPI.storage.clear()).resolves.toBeUndefined();
+
+    expect(get).toHaveBeenCalledWith('key');
+    expect(set).toHaveBeenCalledWith({ key: 'value' });
+    expect(remove).toHaveBeenCalledWith('key');
+    expect(clear).toHaveBeenCalled();
+  });
+
+  it('envuelve APIs storage de Chrome con callbacks en promesas', async () => {
+    const get = vi.fn((_key, cb) => cb({ key: 'value' }));
+    const set = vi.fn((_data, cb) => cb());
+    const remove = vi.fn((_key, cb) => cb());
+    const clear = vi.fn((cb) => cb());
+
+    globalThis.chrome = {
+      storage: { local: { get, set, remove, clear } },
+      runtime: { lastError: null, onMessage: { addListener: vi.fn() } },
+    };
+
+    const { browserAPI } = await loadBrowserUtils();
+
+    await expect(browserAPI.storage.get('key')).resolves.toEqual({ key: 'value' });
+    await expect(browserAPI.storage.set({ key: 'value' })).resolves.toBeUndefined();
+    await expect(browserAPI.storage.remove('key')).resolves.toBeUndefined();
+    await expect(browserAPI.storage.clear()).resolves.toBeUndefined();
+
+    expect(get).toHaveBeenCalledWith('key', expect.any(Function));
+    expect(set).toHaveBeenCalledWith({ key: 'value' }, expect.any(Function));
+    expect(remove).toHaveBeenCalledWith('key', expect.any(Function));
+    expect(clear).toHaveBeenCalledWith(expect.any(Function));
+  });
+
+  it('rechaza API storage chrome con callbacks cuando runtime.lastError está definido', async () => {
+    const get = vi.fn((_key, cb) => {
+      globalThis.chrome.runtime.lastError = { message: 'Storage error' };
+      cb();
+    });
+
+    globalThis.chrome = {
+      storage: { local: { get } },
+      runtime: { lastError: null, onMessage: { addListener: vi.fn() } },
+    };
+
+    const { browserAPI } = await loadBrowserUtils();
+
+    await expect(browserAPI.storage.get('key')).rejects.toThrow('Storage error');
+  });
+
 });
