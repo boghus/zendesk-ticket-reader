@@ -109,6 +109,11 @@ Los tests viven en `tests/` a la misma altura que `src/`, separados del árbol d
 
 La cobertura excluye `src/app/` (`popup.js`, `content.js`) porque esos archivos dependen de APIs WebExtension que jsdom no puede simular. El resto (`src/core/`, `src/shared/`) tiene threshold de 80% en todas las métricas.
 
+## Requisitos
+
+- Node.js `v24.18.0` (LTS)
+- Si usás `nvm`, el proyecto ya incluye `.nvmrc`
+
 ## Decisiones de diseño
 
 - **Sin backend** — toda la lógica corre en el browser, sin latencia ni dependencias externas
