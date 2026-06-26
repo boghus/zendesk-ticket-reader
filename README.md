@@ -69,7 +69,7 @@ La extensión actúa como pipeline liviano entre la fuente de datos operacional 
 |------|-----------|
 | Extracción | WebExtension Content Script (DOM API) |
 | Comunicación | WebExtension Message Passing |
-| UI | HTML + CSS vanilla |
+| UI | HTML + Tailwind CSS |
 | Integración | Clipboard API |
 | Build | esbuild |
 | Tests | Vitest + jsdom |
@@ -108,6 +108,11 @@ npm run test:coverage   # reporte de cobertura
 Los tests viven en `tests/` a la misma altura que `src/`, separados del árbol de módulos que bundlea esbuild.
 
 La cobertura excluye `src/app/` (`popup.js`, `content.js`) porque esos archivos dependen de APIs WebExtension que jsdom no puede simular. El resto (`src/core/`, `src/shared/`) tiene threshold de 80% en todas las métricas.
+
+## Requisitos
+
+- Node.js `v24.18.0` (LTS)
+- Si usás `nvm`, el proyecto ya incluye `.nvmrc`
 
 ## Decisiones de diseño
 

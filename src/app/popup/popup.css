@@ -1,133 +1,165 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  width: 320px;
-  background: #f8f9fa;
-  color: #1f2937;
+:root[data-theme='dracula'] {
+  --color-canvas: 40 42 54;
+  --color-panel: 68 71 90;
+  --color-panel-strong: 52 55 70;
+  --color-foreground: 248 248 242;
+  --color-muted: 98 114 164;
+  --color-accent: 189 147 249;
+  --color-accent-2: 255 121 198;
+  --color-border: 255 255 255;
+  --color-danger: 255 85 85;
+  --color-warning: 255 184 108;
+  --color-success: 80 250 123;
+  --color-shadow: 0 0 0;
 }
 
-header {
-  background: #03363d;
-  color: white;
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+:root[data-theme='light'] {
+  --color-canvas: 255 255 255;
+  --color-panel: 255 255 255;
+  --color-panel-strong: 246 248 250;
+  --color-foreground: 36 41 47;
+  --color-muted: 87 96 106;
+  --color-accent: 9 105 218;
+  --color-accent-2: 130 80 223;
+  --color-border: 208 215 222;
+  --color-danger: 207 34 46;
+  --color-warning: 154 103 0;
+  --color-success: 26 127 55;
+  --color-shadow: 31 35 40;
 }
 
-header h1 {
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+@layer base {
+  html,
+  body {
+    @apply min-h-full;
+  }
+
+  body {
+    @apply m-0 w-[320px] bg-canvas text-foreground font-sans;
+
+    background-image:
+      radial-gradient(circle at top, rgb(var(--color-accent) / 0.08), transparent 38%),
+      linear-gradient(180deg, rgb(var(--color-panel-strong)) 0%, rgb(var(--color-canvas)) 100%);
+  }
 }
 
-header .badge {
-  margin-left: auto;
-  background: rgba(255,255,255,0.15);
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 12px;
-}
+@layer components {
+  header {
+    @apply flex items-center gap-2 px-4 py-3 text-foreground;
+    background: linear-gradient(
+      135deg,
+      rgb(var(--color-panel)) 0%,
+      rgb(var(--color-panel-strong)) 52%,
+      rgb(var(--color-canvas)) 100%
+    );
+    border-bottom: 1px solid rgb(var(--color-border) / 0.08);
+  }
 
-.content { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+  header h1 {
+    @apply text-sm font-semibold tracking-wide;
+  }
 
-.field {
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 12px 14px;
-}
+  .header-main {
+    @apply flex min-w-0 flex-1 items-center gap-2;
+  }
 
-.field-label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: #6b7280;
-  margin-bottom: 4px;
-}
+  .theme-switcher {
+    @apply flex items-center gap-2 rounded-full border border-border/40 bg-panel px-2 py-1;
+  }
 
-.field-value {
-  font-size: 14px;
-  color: #111827;
-  word-break: break-word;
-  line-height: 1.4;
-}
+  .theme-switcher label {
+    @apply sr-only;
+  }
 
-.field-value.empty {
-  color: #9ca3af;
-  font-style: italic;
-  font-size: 13px;
-}
+  .theme-select {
+    @apply appearance-none rounded-full border-0 bg-transparent px-2 py-0.5 text-[11px] font-medium text-accent outline-none cursor-pointer;
+  }
 
-.priority-badge {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: capitalize;
-}
+  .theme-select option {
+    @apply text-slate-900;
+  }
 
-.priority-urgent  { background: #fee2e2; color: #dc2626; }
-.priority-high    { background: #fef3c7; color: #d97706; }
-.priority-normal  { background: #dbeafe; color: #2563eb; }
-.priority-low     { background: #f3f4f6; color: #6b7280; }
+  header .badge {
+    @apply ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-medium text-accent2;
+  }
 
-#status {
-  text-align: center;
-  padding: 24px 16px;
-  color: #6b7280;
-  font-size: 13px;
-  line-height: 1.5;
-}
+  .content {
+    @apply flex flex-col gap-3 p-4;
+  }
 
-#status.error { color: #dc2626; }
+  .field {
+    @apply rounded-xl border border-border/40 bg-panel/95 p-3 shadow-sm backdrop-blur;
+  }
 
-.spinner {
-  width: 24px; height: 24px;
-  border: 3px solid #e5e7eb;
-  border-top-color: #03363d;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  margin: 0 auto 10px;
-}
+  .field-label {
+    @apply mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted;
+  }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+  .field-value {
+    @apply text-sm leading-5 break-words text-foreground;
+  }
 
-.btn-row {
-  display: flex;
-  gap: 8px;
-  margin: 0 16px 16px;
-}
+  .field-value.empty {
+    @apply text-muted italic;
+  }
 
-.btn {
-  flex: 1;
-  padding: 9px;
-  border: none;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s;
-}
+  .priority-badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize;
+  }
 
-.btn-primary {
-  background: #03363d;
-  color: white;
-}
-.btn-primary:hover { background: #024a53; }
+  .priority-urgent {
+    @apply bg-danger/15 text-danger;
+  }
 
-.btn-secondary {
-  background: white;
-  color: #03363d;
-  border: 1px solid #03363d;
-}
-.btn-secondary:hover { background: #f0fafa; }
+  .priority-high {
+    @apply bg-warning/15 text-warning;
+  }
 
-.btn-secondary.copied {
-  background: #d1fae5;
-  color: #065f46;
-  border-color: #065f46;
+  .priority-normal {
+    @apply bg-accent/15 text-accent;
+  }
+
+  .priority-low {
+    @apply bg-white/5 text-muted;
+  }
+
+  #status {
+    @apply px-4 py-6 text-center text-sm leading-6 text-muted;
+  }
+
+  #status.error {
+    @apply text-danger;
+  }
+
+  .spinner {
+    @apply mx-auto mb-3 h-6 w-6 rounded-full border-4 border-border/40 border-t-accent2 animate-spin;
+  }
+
+  .btn-row {
+    @apply mx-4 mb-4 flex gap-2;
+  }
+
+  .btn {
+    @apply flex-1 rounded-xl border border-border/40 px-3 py-2 text-sm font-medium transition duration-150 ease-out;
+  }
+
+  .btn-primary {
+    @apply border-accent/35 bg-accent/10 text-foreground shadow-none hover:bg-accent/15;
+  }
+
+  :root[data-theme='light'] .btn-primary {
+    @apply border-border/40 bg-panel text-foreground shadow-none hover:bg-panel-strong;
+  }
+
+  .btn-secondary {
+    @apply border-border/40 bg-panel text-foreground hover:bg-panel-strong;
+  }
+
+  .btn-secondary.copied {
+    @apply border-success/40 bg-success/15 text-success hover:bg-success/20;
+  }
 }
