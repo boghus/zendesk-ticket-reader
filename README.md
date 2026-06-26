@@ -69,7 +69,7 @@ La extensión actúa como pipeline liviano entre la fuente de datos operacional 
 |------|-----------|
 | Extracción | WebExtension Content Script (DOM API) |
 | Comunicación | WebExtension Message Passing |
-| UI | HTML + CSS vanilla |
+| UI | HTML + Tailwind CSS |
 | Integración | Clipboard API |
 | Build | esbuild |
 | Tests | Vitest + jsdom |

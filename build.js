@@ -1,5 +1,7 @@
 import * as esbuild from 'esbuild';
 import fs from 'fs';
+import { execFileSync } from 'node:child_process';
+import path from 'node:path';
 
 async function build() {
   console.log('🚀 Iniciando build...');
@@ -22,8 +24,21 @@ async function build() {
     });
   }
 
+  const tailwindBin = process.platform === 'win32'
+    ? path.resolve('node_modules/.bin/tailwindcss.cmd')
+    : path.resolve('node_modules/.bin/tailwindcss');
+
+  execFileSync(tailwindBin, [
+    '-c',
+    'tailwind.config.js',
+    '-i',
+    'src/app/popup/popup.css',
+    '-o',
+    'dist/popup.css',
+    '--minify',
+  ], { stdio: 'inherit' });
+
   fs.copyFileSync('src/app/popup/popup.html', 'dist/popup.html');
-  fs.copyFileSync('src/app/popup/popup.css', 'dist/popup.css');
 
   // Sincronización dinámica del manifest
   const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
