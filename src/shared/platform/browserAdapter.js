@@ -14,6 +14,9 @@ const CALLBACK_METHODS = {
   scripting: new Set([
     'executeScript',
   ]),
+  runtime: new Set([
+    'openOptionsPage',
+  ]),
   storage: new Set([
     'get',
     'set',
@@ -152,6 +155,13 @@ export const browserAPI = {
   },
   scripting: {
     executeScript: (...args) => callAPI('scripting', 'executeScript', ...args),
+  },
+  runtime: {
+    openOptionsPage: (...args) => callAPI('runtime', 'openOptionsPage', ...args),
+    getManifest: () => {
+      assertBrowserAPI();
+      return getRawAPI().runtime.getManifest();
+    },
   },
   storage: {
     get: (...args) => storageCall('get', ...args),

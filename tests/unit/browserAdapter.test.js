@@ -102,6 +102,63 @@ describe('adaptador de navegador', () => {
     await expect(browserAPI.tabs.query({ active: true })).rejects.toThrow('Query failed');
   });
 
+  it('expone runtime.openOptionsPage para APIs browser basadas en promesas', async () => {
+    const openOptionsPage = vi.fn().mockResolvedValue(undefined);
+
+    globalThis.browser = {
+      runtime: {
+        openOptionsPage,
+        getManifest: vi.fn().mockReturnValue({ version: '1.2.3' }),
+        onMessage: {
+          addListener: vi.fn(),
+        },
+      },
+    };
+
+    const { browserAPI } = await loadBrowserUtils();
+
+    await expect(browserAPI.runtime.openOptionsPage()).resolves.toBeUndefined();
+    expect(openOptionsPage).toHaveBeenCalledWith();
+  });
+
+  it('envuelve runtime.openOptionsPage de Chrome con callbacks en promesas', async () => {
+    const openOptionsPage = vi.fn((callback) => callback());
+
+    globalThis.chrome = {
+      runtime: {
+        openOptionsPage,
+        lastError: null,
+        getManifest: vi.fn().mockReturnValue({ version: '1.2.3' }),
+        onMessage: {
+          addListener: vi.fn(),
+        },
+      },
+    };
+
+    const { browserAPI } = await loadBrowserUtils();
+
+    await expect(browserAPI.runtime.openOptionsPage()).resolves.toBeUndefined();
+    expect(openOptionsPage).toHaveBeenCalledWith(expect.any(Function));
+  });
+
+  it('expone runtime.getManifest sin envolver la respuesta', async () => {
+    const getManifest = vi.fn().mockReturnValue({ version: '9.9.9' });
+
+    globalThis.browser = {
+      runtime: {
+        getManifest,
+        onMessage: {
+          addListener: vi.fn(),
+        },
+      },
+    };
+
+    const { browserAPI } = await loadBrowserUtils();
+
+    expect(browserAPI.runtime.getManifest()).toEqual({ version: '9.9.9' });
+    expect(getManifest).toHaveBeenCalledTimes(1);
+  });
+
   it('retorna promesas desde listeners asincronos de mensajes en Firefox', async () => {
     const addListener = vi.fn();
 
