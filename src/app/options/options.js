@@ -1,5 +1,8 @@
 import { browserAPI } from '../../shared/platform/browserAdapter.js';
 
+/**
+ * Displays the extension version in the app version element.
+ */
 function setVersion() {
   const versionEl = document.getElementById('app-version');
   const version = browserAPI.runtime.getManifest()?.version ?? '—';
@@ -9,6 +12,9 @@ function setVersion() {
   }
 }
 
+/**
+ * Binds navigation items to their corresponding panels.
+ */
 function bindNavigation() {
   const items = document.querySelectorAll('[data-section]');
   const panels = document.querySelectorAll('[data-panel]');
