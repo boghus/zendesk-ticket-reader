@@ -1,0 +1,119 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    min-height: 100%;
+    margin: 0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: rgb(var(--color-foreground));
+    background:
+      radial-gradient(circle at top left, rgb(var(--color-accent) / 0.08), transparent 28%),
+      linear-gradient(180deg, rgb(var(--color-panel-strong)) 0%, rgb(var(--color-canvas)) 100%);
+  }
+}
+
+@layer utilities {
+  .text-muted {
+    color: rgb(var(--color-muted));
+  }
+
+  .text-foreground {
+    color: rgb(var(--color-foreground));
+  }
+
+  .border-default {
+    border-color: rgb(var(--color-border) / 0.14);
+  }
+}
+
+@layer components {
+  .sidebar {
+    @apply px-4 py-5 border-b md:border-b-0 md:border-r border-default backdrop-blur-[10px];
+    background: rgb(var(--color-panel) / 0.72);
+  }
+
+  .brand {
+    @apply flex items-center gap-3 mb-6;
+  }
+
+  .brand-mark {
+    @apply w-10 h-10 rounded-xl grid place-items-center font-bold;
+    background: rgb(var(--color-accent));
+    color: rgb(var(--color-canvas));
+    letter-spacing: 0.04em;
+    box-shadow: 0 10px 22px rgb(var(--color-shadow) / 0.12);
+  }
+
+  .nav-item {
+    @apply border border-transparent bg-transparent text-left px-3 py-[11px] rounded-xl cursor-pointer focus-visible:outline-none;
+    color: rgb(var(--color-foreground));
+    font: inherit;
+  }
+
+  .nav-item:hover,
+  .nav-item:focus-visible {
+    background: rgb(var(--color-accent) / 0.10);
+  }
+
+  .nav-item.active {
+    @apply font-semibold;
+    border-color: rgb(var(--color-accent) / 0.18);
+    background: rgb(var(--color-accent) / 0.12);
+    color: rgb(var(--color-accent));
+  }
+
+  .panel {
+    @apply hidden max-w-[840px] border border-default rounded-3xl p-5 md:p-7 backdrop-blur-[10px];
+    background: rgb(var(--color-panel) / 0.86);
+    box-shadow: 0 16px 40px rgb(var(--color-shadow) / 0.10);
+  }
+
+  .panel.active {
+    @apply block;
+  }
+
+  .card {
+    @apply border border-default rounded-2xl p-4;
+    background: rgb(var(--color-panel-strong) / 0.76);
+  }
+
+  .card-label {
+    @apply text-xs text-muted uppercase mb-2 font-bold;
+    letter-spacing: 0.08em;
+  }
+
+  .card-value {
+    @apply text-base font-semibold;
+  }
+
+  .eyebrow {
+    @apply m-0 mb-2 uppercase text-[11px] text-muted font-bold;
+    letter-spacing: 0.16em;
+  }
+
+  .lead {
+    @apply mt-3.5 mb-6 max-w-[62ch] text-muted leading-relaxed;
+  }
+
+  .section+.section {
+    @apply mt-6;
+  }
+
+  .feature-list {
+    @apply m-0 pl-[18px] text-foreground leading-relaxed list-disc;
+  }
+
+  .note {
+    @apply m-0 text-muted leading-relaxed;
+  }
+}

@@ -2,6 +2,8 @@ export default {
   content: [
     './src/app/popup/popup.html',
     './src/app/popup/popup.js',
+    './src/app/options/options.html',
+    './src/app/options/options.js',
   ],
   theme: {
     extend: {
