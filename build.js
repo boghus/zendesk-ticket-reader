@@ -11,6 +11,7 @@ async function build() {
   const entryPoints = [
     { in: 'src/app/popup/popup.js', out: 'dist/popup.js' },
     { in: 'src/app/content/content.js', out: 'dist/content.js' },
+    { in: 'src/app/options/options.js', out: 'dist/options.js' },
   ];
 
   for (const entry of entryPoints) {
@@ -39,6 +40,9 @@ async function build() {
   ], { stdio: 'inherit' });
 
   fs.copyFileSync('src/app/popup/popup.html', 'dist/popup.html');
+  fs.copyFileSync('src/app/options/options.html', 'dist/options.html');
+  fs.copyFileSync('src/app/options/options.css', 'dist/options.css');
+  fs.copyFileSync('src/app/theme.css', 'dist/theme.css');
 
   // Sincronización dinámica del manifest
   const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
