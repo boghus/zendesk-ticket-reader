@@ -2,17 +2,43 @@
 language: 'es-ES'
 
 tone_instructions: |
-  Responde en español latinoamericano. 
+  Responde en español latinoamericano.
   Comentarios técnicos, breves y accionables.
-  Enfócate SOLO en el diff. Evita sugerir refactors ajenos al cambio o actuar
+  Enfócate únicamente en el diff.
+  Evita sugerir refactors ajenos al cambio o actuar como arquitecto de software para partes no afectadas.
 
 reviews:
-  # Optimización de consumo: Desactiva el resumen global para evitar procesar archivos completos
-  high_level_summary: false 
+  # Optimización de consumo: evita procesar archivos completos para generar un resumen global.
+  high_level_summary: false
+
   instructions: |
-    Tu análisis debe centrarse única y exclusivamente en las líneas de código modificadas dentro del diff del Pull Request. 
-    Evita realizar sugerencias o comentarios sobre partes del archivo que no han sido alteradas en este cambio, 
-    manteniendo el contexto estrictamente en lo que se está enviando a revisión.
+    Tu análisis debe centrarse únicamente en las líneas modificadas del Pull Request.
+
+    No sugieras cambios sobre código que no forma parte del diff.
+
+    POLÍTICA DE ESTILOS DEL PROYECTO
+
+    Este proyecto adopta Tailwind CSS como estándar para la implementación de estilos.
+
+    Cuando el diff agregue CSS personalizado (archivos .css, bloques <style> o atributos style), verifica si puede reemplazarse mediante utilidades de Tailwind.
+
+    Si puede reemplazarse, genera un comentario solicitando la conversión a Tailwind e incluye, cuando sea evidente, las clases equivalentes.
+
+    No reportes como problema los siguientes casos:
+    - Librerías de terceros.
+    - Archivos generados automáticamente.
+    - Reglas @keyframes.
+    - Reglas @font-face.
+    - Variables CSS (Custom Properties).
+    - Estilos globales estrictamente necesarios.
+
+    Antes de generar un comentario:
+    - Verifica que el problema realmente exista.
+    - No hagas suposiciones sobre código que no aparece en el diff.
+    - Si la evidencia no es suficiente, no generes el comentario.
+    - No sugieras refactors, cambios de estilo o mejoras que no estén relacionadas con el cambio enviado.
+    - Si detectas un problema, explica brevemente por qué lo es y, cuando sea posible, propone una solución concreta.
+
   base_branches:
     - 'main'
     - 'develop'
@@ -26,10 +52,8 @@ reviews:
   # Filtros de ruta: Define qué archivos incluir y cuáles ignorar por completo
   path_filters:
     - 'src/**'
-    - 'scripts/**'
-    - 'background/**'
-    - 'content/**'
-    - 'popup/**'
+    - 'tests/**'
+    - '.coderabbit.yml'
     - '.github/workflows/**'
     - '!dist/**'
     - '!build/**'
@@ -52,8 +76,59 @@ reviews:
       enabled: true    # Análisis estático para detectar fallos de seguridad conocidos en el código
 
   path_instructions:
-    - path: '**/*.js'
-      instructions: 'Priorizar seguridad (XSS/inyección), manejo de errores asíncronos y evitar refactors fuera del diff.'
+
+    - path: '**/*.{js,ts,jsx,tsx,html}'
+      instructions: |
+        Prioriza revisar:
+
+        - Seguridad (XSS, inyección y validación de entradas).
+        - Manejo correcto de errores asíncronos.
+        - Posibles memory leaks.
+        - Variables, imports y código sin uso.
+        - Complejidad innecesaria introducida por el cambio.
+        - Accesibilidad cuando el diff modifica la interfaz.
+
+        Política de estilos:
+        - Si encuentras atributos style, bloques <style> o manipulación dinámica de estilos, verifica si pueden reemplazarse mediante clases de Tailwind.
+        - Cuando sea posible, solicita la conversión e incluye las clases equivalentes de Tailwind.
+
+        No sugieras refactors fuera del diff.
+
+    - path: '**/*.css'
+      instructions: |
+        Este proyecto utiliza Tailwind CSS como estándar.
+
+        Considera la incorporación de nuevas reglas CSS como una excepción.
+
+        Si una regla CSS puede implementarse mediante utilidades de Tailwind, repórtala como una desviación del estándar del proyecto y solicita su conversión.
+
+        No reportes los siguientes casos:
+        - Librerías de terceros.
+        - Archivos generados automáticamente.
+        - Reglas @keyframes.
+        - Reglas @font-face.
+        - Variables CSS (Custom Properties).
+        - Estilos globales estrictamente necesarios.
+
+    - path: 'src/manifest.json'
+      instructions: |
+        Revisa:
+        - Cambios en "permissions" y "host_permissions".
+        - Cambios en "content_scripts".
+        - Cambios en "web_accessible_resources".
+        - Cambios en "externally_connectable".
+
+        Exige una justificación para cualquier permiso nuevo.
+
+        Verifica que el principio de mínimo privilegio se mantenga.
+   
+    - path: '.coderabbit.yml'
+      instructions: |
+      Revisa:
+      - Cambios que reduzcan la calidad de las revisiones automáticas.
+      - Reglas demasiado permisivas que permitan incumplir estándares del proyecto.
+      - Filtros que puedan excluir código relevante.
+      - Cambios que aumenten falsos positivos o consumo innecesario.
 
 chat:
   enabled: true # Habilita la interacción directa con la IA mediante comentarios en el PR
