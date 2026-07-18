@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuración - Ticket Reader for Zendesk</title>
+  <link rel="stylesheet" href="theme.css" />
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <div class="layout min-h-screen grid grid-cols-1 md:grid-cols-[240px_1fr]">
+    <aside class="sidebar" aria-label="Navegación de configuración">
+      <div class="brand">
+        <div class="brand-mark">
+          <img src="icons/icon48.png" alt="Ticket Reader" class="w-full h-full object-contain" />
+        </div>
+        <div>
+          <div class="brand-title font-bold">Ticket Reader</div>
+          <div class="brand-subtitle text-xs text-muted">Configuración</div>
+        </div>
+      </div>
+
+      <nav class="nav flex flex-col gap-2">
+        <button class="nav-item active" type="button" data-section="about" aria-current="page">
+          Acerca de
+        </button>
+      </nav>
+    </aside>
+
+    <main class="main p-4 md:p-7">
+      <section class="panel active" id="section-about" data-panel="about">
+        <p class="eyebrow">Información de la extensión</p>
+        <h1 class="m-0 text-[30px] leading-[1.1]">Acerca de</h1>
+        <p class="lead">
+          Ticket Reader para Zendesk ayuda a los agentes de soporte a identificar rápidamente la
+          información más relevante de cada ticket. Al abrir un caso, la extensión destaca los datos
+          clave en una vista clara y accesible, permitiéndote reducir el tiempo de búsqueda y enfocarte
+          en lo importante: resolver incidencias de manera eficiente.
+        </p>
+
+        <div class="card-grid grid grid-cols-1 md:grid-cols-2 gap-3.5 mb-6">
+          <article class="card">
+            <div class="card-label">Versión actual</div>
+            <div class="card-value" id="app-version">—</div>
+          </article>
+
+          <article class="card">
+            <div class="card-label">Compatibilidad</div>
+            <div class="card-value">Google Chrome y Mozilla Firefox</div>
+          </article>
+
+          <article class="card">
+            <div class="card-label">Almacenamiento</div>
+            <div class="card-value">Local en el navegador</div>
+          </article>
+        </div>
+
+        <div class="section">
+          <h2 class="m-0 mb-3 text-lg">Qué hace la extensión</h2>
+          <ul class="feature-list">
+            <li><strong>Extracción inteligente:</strong> lee automáticamente el asunto, título, prioridad, enlace y fecha de vencimiento desde la interfaz activa de Zendesk.</li>
+            <li><strong>Listo para compartir:</strong> formatea el texto de forma limpia y estructurada para copiar y pegar rápidamente en Google Chat u otras herramientas internas.</li>
+            <li><strong>Privacidad y persistencia:</strong> guarda la configuración de forma 100% local en tu navegador, sin dependencias externas.</li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <h2 class="m-0 mb-3 text-lg">Beneficios clave</h2>
+          <ul class="feature-list">
+            <li><strong>Visualización ágil:</strong> accede a información estructurada y organizada de un solo vistazo.</li>
+            <li><strong>Optimización del tiempo:</strong> reduce los minutos dedicados a la revisión manual y al scroll innecesario dentro de Zendesk.</li>
+            <li><strong>Integración nativa:</strong> se acopla de manera fluida a tu entorno de trabajo actual sin alterar tus flujos establecidos.</li>
+            <li><strong>Diseñado para soporte:</strong> pensado para agentes que necesitan comprender el contexto de un ticket de forma rápida, clara y eficiente.</li>
+          </ul>
+        </div>
+
+        <p class="note">
+          <strong>Nota sobre futuras versiones:</strong> actualmente se muestran los campos esenciales
+          mencionados, con la planificación de ampliar y personalizar los campos mostrados en los próximos lanzamientos.
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
