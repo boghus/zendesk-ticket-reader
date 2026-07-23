@@ -8,40 +8,23 @@ tone_instructions: |
   Evita sugerir refactors ajenos al cambio o actuar como arquitecto de software para partes no afectadas.
 
 reviews:
-  # Optimización de consumo: evita procesar archivos completos para generar un resumen global.
-  high_level_summary: false
+  high_level_summary: true
 
-  instructions: |
-    Tu análisis debe centrarse únicamente en las líneas modificadas del Pull Request.
+  review_status: true
 
-    No sugieras cambios sobre código que no forma parte del diff.
+  high_level_summary_instructions: |
+    Genera un resumen en español latinoamericano.
 
-    POLÍTICA DE ESTILOS DEL PROYECTO
+    Incluye:
+    - Objetivo del Pull Request.
+    - Cambios principales realizados.
+    - Problemas detectados.
+    - Correcciones aplicadas.
 
-    Este proyecto adopta Tailwind CSS como estándar para la implementación de estilos.
-
-    Cuando el diff agregue CSS personalizado (archivos .css, bloques <style> o atributos style), verifica si puede reemplazarse mediante utilidades de Tailwind.
-
-    Si puede reemplazarse, genera un comentario solicitando la conversión a Tailwind e incluye, cuando sea evidente, las clases equivalentes.
-
-    No reportes como problema los siguientes casos:
-    - Librerías de terceros.
-    - Archivos generados automáticamente.
-    - Reglas @keyframes.
-    - Reglas @font-face.
-    - Variables CSS (Custom Properties).
-    - Estilos globales estrictamente necesarios.
-
-    Antes de generar un comentario:
-    - Verifica que el problema realmente exista.
-    - No hagas suposiciones sobre código que no aparece en el diff.
-    - Si la evidencia no es suficiente, no generes el comentario.
-    - No sugieras refactors, cambios de estilo o mejoras que no estén relacionadas con el cambio enviado.
-    - Si detectas un problema, explica brevemente por qué lo es y, cuando sea posible, propone una solución concreta.
+    Usa únicamente información presente en el diff.
 
   base_branches:
-    - 'main'
-    - 'develop'
+    - '.*'
   poem: false # Desactiva respuestas en formato de poema para mantener profesionalismo
   profile: 'chill' # Perfil de revisión relajado para evitar ruido excesivo
   auto_review:
@@ -74,6 +57,8 @@ reviews:
       enabled: true   # Escanea el PR buscando llaves, tokens o credenciales expuestas por accidente
     semgrep: 
       enabled: true    # Análisis estático para detectar fallos de seguridad conocidos en el código
+    checkov:
+      enabled: false
 
   path_instructions:
 
