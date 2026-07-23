@@ -24,6 +24,9 @@
         <button class="nav-item active" type="button" data-section="about" aria-current="page">
           Acerca de
         </button>
+        <button class="nav-item" type="button" data-section="config">
+          Reglas de Extracción
+        </button>
       </nav>
     </aside>
 
@@ -78,6 +81,17 @@
           <strong>Nota sobre futuras versiones:</strong> actualmente se muestran los campos esenciales
           mencionados, con la planificación de ampliar y personalizar los campos mostrados en los próximos lanzamientos.
         </p>
+      </section>
+
+      <section class="panel hidden" id="section-config" data-panel="config">
+        <h1 class="m-0 text-[30px] leading-[1.1] mb-2">Reglas de Extracción</h1>
+        <p class="mb-4 text-muted">Define y edita las reglas y selectores utilizados para capturar la información de Zendesk.</p>
+        <div id="config-error" class="hidden mb-4 p-3 bg-danger/10 text-danger border border-danger/20 rounded text-sm font-medium"></div>
+        <textarea id="config-textarea" class="w-full h-[500px] font-mono text-sm p-4 bg-canvas text-foreground border border-default rounded mb-4 focus:ring-2 focus:ring-accent focus:border-accent outline-none" spellcheck="false"></textarea>
+        <div class="flex gap-3">
+          <button id="btn-save-config" class="bg-accent text-canvas px-5 py-2.5 rounded font-medium hover:opacity-90 transition-opacity shadow-sm">Guardar Configuración</button>
+          <button id="btn-reset-config" class="bg-panel-strong text-foreground border border-default px-5 py-2.5 rounded font-medium hover:bg-panel transition-colors shadow-sm">Restablecer por Defecto</button>
+        </div>
       </section>
     </main>
   </div>

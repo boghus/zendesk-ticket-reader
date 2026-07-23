@@ -1,3 +1,4 @@
+import { DomExtractionService } from '../../core/services/domExtractionService.js';
 import { browserAPI } from '../../shared/platform/browserAdapter.js';
 
 function setVersion() {
@@ -37,4 +38,8 @@ function bindNavigation() {
 document.addEventListener('DOMContentLoaded', () => {
   setVersion();
   bindNavigation();
+
+  const extractionService = new DomExtractionService();
+  extractionService.registerExtractionEvents();
+  extractionService.loadExtractionRules();
 });
