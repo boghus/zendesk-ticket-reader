@@ -9,6 +9,7 @@ async function build() {
   const entryPoints = [
     { in: 'src/app/popup/popup.js', out: 'dist/popup.js' },
     { in: 'src/app/content/content.js', out: 'dist/content.js' },
+    { in: 'src/app/options/options.js', out: 'dist/options.js' },
   ];
 
   for (const entry of entryPoints) {
@@ -16,16 +17,17 @@ async function build() {
       entryPoints: [entry.in],
       bundle: true,
       minify: true,
-      sourcemap: true, // Facilita la revisión de Mozilla y el debugging
+      sourcemap: true,
       outfile: entry.out,
-      format: 'iife', // IIFE es más robusto para inyección de content scripts
+      format: 'iife',
     });
   }
 
   fs.copyFileSync('src/app/popup/popup.html', 'dist/popup.html');
   fs.copyFileSync('src/app/popup/popup.css', 'dist/popup.css');
+  fs.copyFileSync('src/app/options/options.html', 'dist/options.html');
+  fs.copyFileSync('src/app/options/options.css', 'dist/options.css');
 
-  // Sincronización dinámica del manifest
   const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
   const manifest = JSON.parse(fs.readFileSync('src/manifest.json', 'utf-8'));
   
@@ -33,7 +35,6 @@ async function build() {
   fs.writeFileSync('dist/manifest.json', JSON.stringify(manifest, null, 2));
   console.log(`info: Manifest generado en dist/ con versión ${pkg.version}`);
   
-  // Usamos cpSync para simplificar la copia de directorios
   fs.cpSync('src/assets/icons', 'dist/icons', { recursive: true });
   
   console.log('✅ Build completado con éxito.');
