@@ -16,10 +16,14 @@ function errorPayload(error) {
   return { error: error?.message ?? String(error) };
 }
 
+function resolveTarget(namespace) {
+  return namespace.split('.').reduce((target, key) => target?.[key], rawBrowserAPI);
+}
+
 function callAPI(namespace, method, ...args) {
   assertBrowserAPI();
 
-  const target = rawBrowserAPI[namespace];
+  const target = resolveTarget(namespace);
   const fn = target?.[method];
 
   if (typeof fn !== 'function') {
@@ -93,9 +97,9 @@ export const browserAPI = {
   },
   storage: {
     local: {
-      get: (...args) => callAPI('storage', 'local', 'get', ...args),
-      set: (...args) => callAPI('storage', 'local', 'set', ...args),
-      remove: (...args) => callAPI('storage', 'local', 'remove', ...args),
+      get: (...args) => callAPI('storage.local', 'get', ...args),
+      set: (...args) => callAPI('storage.local', 'set', ...args),
+      remove: (...args) => callAPI('storage.local', 'remove', ...args),
     },
   },
 };
