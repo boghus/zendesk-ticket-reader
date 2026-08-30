@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuración - Ticket Reader for Zendesk</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <main class="settings">
+    <header>
+      <h1>Configuración</h1>
+      <p>Personaliza los datos que muestra Ticket Reader.</p>
+    </header>
+
+    <section class="card">
+      <label class="setting">
+        <span>
+          <strong>Mostrar prioridad</strong>
+          <small>Incluye la prioridad del ticket en el popup.</small>
+        </span>
+        <input type="checkbox" id="show-priority" />
+      </label>
+
+      <label class="setting">
+        <span>
+          <strong>Mostrar fecha de vencimiento</strong>
+          <small>Incluye la fecha de vencimiento del ticket en el popup.</small>
+        </span>
+        <input type="checkbox" id="show-due-date" />
+      </label>
+    </section>
+
+    <div class="actions">
+      <button id="save-btn" class="primary">Guardar</button>
+      <button id="reset-btn" class="secondary">Restaurar valores</button>
+    </div>
+
+    <p id="status" role="status" aria-live="polite"></p>
+  </main>
+
+  <script src="options.js"></script>
+</body>
+</html>
