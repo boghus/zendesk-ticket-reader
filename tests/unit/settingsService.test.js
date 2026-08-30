@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const storageService = {
-  get: vi.fn(),
-  getAll: vi.fn(),
-  set: vi.fn(),
-  resetToDefault: vi.fn(),
-};
+const { storageService } = vi.hoisted(() => ({
+  storageService: {
+    get: vi.fn(),
+    getAll: vi.fn(),
+    set: vi.fn(),
+    resetToDefault: vi.fn(),
+  },
+}));
 
 vi.mock('../../src/core/services/storageService.js', () => ({
   storageService,
