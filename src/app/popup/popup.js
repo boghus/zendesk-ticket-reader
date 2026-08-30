@@ -1,4 +1,5 @@
 import { PRIORITY_LABELS } from '../../shared/constants/labels.js';
+import { settingsService } from '../../core/services/settingsService.js';
 import { browserAPI } from '../../shared/platform/browserAdapter.js';
 import { buildClipboardText } from '../../shared/utils/format.js';
 
@@ -65,13 +66,19 @@ function renderField(id, value, emptyMsg) {
   }
 }
 
-function showData(data) {
+function applyFieldVisibility(settings) {
+  document.getElementById('field-priority').closest('.field').style.display = settings.showPriority ? '' : 'none';
+  document.getElementById('field-due-date').closest('.field').style.display = settings.showDueDate ? '' : 'none';
+}
+
+function showData(data, settings) {
   if (data?.error) {
     setStatus(data.error, true);
     return;
   }
 
   currentData = data;
+  applyFieldVisibility(settings);
   document.getElementById('ticket-id').textContent = data.ticketId ? `#${data.ticketId}` : '—';
   renderField('field-subject', data.subject, 'No encontrado');
   renderPriority(document.getElementById('field-priority'), data.priority);
@@ -109,8 +116,11 @@ async function fetchTicketData() {
       return;
     }
 
-    const response = await readTicketData(tab);
-    showData(response);
+    const [response, settings] = await Promise.all([
+      readTicketData(tab),
+      settingsService.getAll(),
+    ]);
+    showData(response, settings);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('No se pudo leer el ticket.', error);
