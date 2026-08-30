@@ -91,4 +91,11 @@ export const browserAPI = {
   scripting: {
     executeScript: (...args) => callAPI('scripting', 'executeScript', ...args),
   },
+  storage: {
+    local: {
+      get: (...args) => callAPI('storage', 'local', 'get', ...args),
+      set: (...args) => callAPI('storage', 'local', 'set', ...args),
+      remove: (...args) => callAPI('storage', 'local', 'remove', ...args),
+    },
+  },
 };
