@@ -1,10 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const storage = {
-  get: vi.fn(),
-  set: vi.fn(),
-  remove: vi.fn(),
-};
+const { storage } = vi.hoisted(() => ({
+  storage: {
+    get: vi.fn(),
+    set: vi.fn(),
+    remove: vi.fn(),
+  },
+}));
 
 vi.mock('../../src/shared/platform/browserAdapter.js', () => ({
   browserAPI: {
